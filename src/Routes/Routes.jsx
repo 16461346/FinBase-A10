@@ -6,6 +6,7 @@ import MyTransaction from "../Pages/MyTransaction";
 import Reports from "../Pages/Reports";
 import Login from "../Pages/Login";
 import Register from "../Pages/Register";
+import ErrorPage from "../Components/ErrorPage";
 
 export const router = createBrowserRouter([
   {
@@ -35,6 +36,10 @@ export const router = createBrowserRouter([
       {
         path:'/register',
         element:<Register/>
+      },
+      {
+        path: "*",
+        element:<ErrorPage/>
       }
     ]
   },

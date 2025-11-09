@@ -5,17 +5,18 @@ import { AuthContext } from "../../Context/AuthContext";
 import { toast } from "react-toastify";
 
 const Navbar = () => {
-  const { user,logOutUser } = use(AuthContext);
+  const { user, logOutUser } = use(AuthContext);
+  console.log(user);
 
-  const handleLogOut=()=>{
-      logOutUser()
-      .then(()=>{
+  const handleLogOut = () => {
+    logOutUser()
+      .then(() => {
         toast.success("Log Out Successfull");
       })
-      .catch(error=>{
-        toast.error("Somthing went wrong")
-      })
-  }
+      .catch((error) => {
+        toast.error("Somthing went wrong");
+      });
+  };
 
   const links = (
     <>
@@ -85,10 +86,14 @@ const Navbar = () => {
         {user ? (
           <div className="dropdown dropdown-end">
             <label tabIndex={0} className="btn btn-ghost btn-circle avatar">
-              <div className="w-10 rounded-full">
+              <div className="w-10 h-10 rounded-full overflow-hidden border-2 border-gray-300">
                 <img
-                  src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp"
+                  src={
+                    user?.photoURL ||
+                    "https://img.freepik.com/free-vector/isolated-young-handsome-man-different-poses-white-background-illustration_632498-859.jpg?semt=ais_hybrid&w=740&q=80"
+                  }
                   alt="Profile"
+                  className="w-full h-full object-cover"
                 />
               </div>
             </label>
@@ -96,17 +101,13 @@ const Navbar = () => {
               tabIndex={0}
               className="menu menu-compact dropdown-content mt-3 p-2 shadow bg-base-100 rounded-box w-52"
             >
-              <li>
-                <Link className="justify-between" to="/profile">
-                  Profile
-                  <span className="badge">New</span>
-                </Link>
-              </li>
-              <li>
-                <Link to="/settings">Settings</Link>
-              </li>
-              <li>
-                <Link onClick={handleLogOut}>Logout</Link>
+              <li className="text-xs">Name : {user.displayName}</li>
+              <li className="text-xs">Email : {user.email}</li>
+              <li
+                onClick={handleLogOut}
+                className="btn bg-[#2fcec1c9]  hover:bg-[#bb0baf71]"
+              >
+                Logout
               </li>
             </ul>
           </div>

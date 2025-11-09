@@ -5,7 +5,7 @@ import { toast } from "react-toastify";
 import { FaRegEye, FaRegEyeSlash } from "react-icons/fa";
 
 const Register = () => {
-  const { creatUser, loginWithGoogle } = useContext(AuthContext);
+  const { creatUser, loginWithGoogle,updateUser } = useContext(AuthContext);
   const navigate = useNavigate();
   const [error, setError] = useState("");
   const [showPassword, setShowPassword] = useState(false);
@@ -31,10 +31,13 @@ const Register = () => {
       return;
     }
 
-    creatUser(email, password, name, image)
-      .then((result) => {
+    creatUser(email, password)
+      .then((result)=>{
+        return updateUser(name,image)
+      })
+      .then(() => {
         toast.success("Account created successfully!");
-        navigate("/"); // Redirect to home
+        navigate("/");
       })
       .catch((err) => {
         console.log(err);
@@ -114,11 +117,6 @@ const Register = () => {
               <p className="text-red-600 text-sm mt-2 font-medium">{error}</p>
             )}
 
-            <div>
-              <Link className="link text-blue-600 font-semibold link-hover">
-                Forgot password?
-              </Link>
-            </div>
             <button className="btn bg-gradient-to-r from-[#ab59cc] to-[#49acca] hover:from-[#49acca] hover:to-[#ab59cc] mt-4 text-white">
               Register
             </button>

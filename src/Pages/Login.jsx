@@ -5,10 +5,13 @@ import { toast } from "react-toastify";
 import { FaRegEye, FaRegEyeSlash } from "react-icons/fa";
 
 const Login = () => {
-  const { user, loginUser,loginWithGoogle } = useContext(AuthContext);
+  const { user, loginUser, loginWithGoogle, passwordReset } =
+    useContext(AuthContext);
   const navigate = useNavigate();
   const [error, setError] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+  const [email, setEmail] = useState("");
+  const [resetE, setResetE] = useState("");
 
   // যদি ইউজার আগে থেকেই লগইন করা থাকে
   useEffect(() => {
@@ -33,16 +36,31 @@ const Login = () => {
       });
   };
 
-  const googleLogin=()=>{
+  const googleLogin = () => {
     loginWithGoogle()
-    .then(result=>{
-      console.log(result)
-    })
-    .catch(err=>{
+      .then((result) => {
+        console.log(result);
+      })
+      .catch((err) => {
         const errorCode = error.code;
         const errorMessage = error.message;
-    })
-  }
+      });
+  };
+
+  const handlePReset = () => {
+    if (!email) {
+      setResetE("!");
+      return;
+    }
+    setResetE("");
+    passwordReset(email)
+      .then(() => {
+        toast.success("Password reset email sent!");
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  };
 
   return (
     <div className="hero bg-base-200 min-h-screen">
@@ -52,12 +70,16 @@ const Login = () => {
             {/* Email Field */}
             <label className="label font-semibold">Email</label>
             <input
+              onChange={(e) => setEmail(e.target.value)}
               type="email"
               required
               name="email"
               className="input input-bordered"
               placeholder="Enter your email"
             />
+            {resetE && (
+              <p className="text-red-600 font-bold">Type your email please !</p>
+            )}
 
             {/* Password Field */}
             <label className="label">Password</label>
@@ -87,7 +109,10 @@ const Login = () => {
             )}
 
             <div className="mt-3">
-              <Link className="link text-blue-600 font-semibold link-hover">
+              <Link
+                onClick={handlePReset}
+                className="link text-blue-600 font-semibold link-hover"
+              >
                 Forgot password?
               </Link>
             </div>
@@ -108,7 +133,10 @@ const Login = () => {
           </form>
 
           {/* Google Login */}
-          <button onClick={googleLogin} className="btn bg-white text-black border-[#e5e5e5] mt-4">
+          <button
+            onClick={googleLogin}
+            className="btn bg-white text-black border-[#e5e5e5] mt-4"
+          >
             <svg
               aria-label="Google logo"
               width="16"
