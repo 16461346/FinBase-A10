@@ -1,0 +1,16 @@
+@import "tailwindcss";
+@plugin "daisyui";
+
+.btn-color {
+  @apply bg-[#51b9a8]
+}
+
+/* Logo text gradient */
+.logo-text {
+  @apply bg-clip-text text-transparent bg-gradient-to-r from-[#41bbb5] to-[#B51BAB];
+}
+.btn-gradient {
+  background: linear-gradient(to right, #ab59cc, #49acca);
+  color: white;
+  transition: background 0.3s ease;
+}
