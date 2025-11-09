@@ -1,62 +1,103 @@
-import React, { use } from "react";
-import { Link, NavLink } from "react-router";
+import React, { useContext, useEffect, useState } from "react";
+import { Link, NavLink, useNavigate } from "react-router";
 import { AuthContext } from "../Context/AuthContext";
-import Swal from "sweetalert2";
+import { toast } from "react-toastify";
+import { FaRegEye, FaRegEyeSlash } from "react-icons/fa";
 
 const Login = () => {
-  const { loginUser } = use(AuthContext);
+  const { user, loginUser,loginWithGoogle } = useContext(AuthContext);
+  const navigate = useNavigate();
+  const [error, setError] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
 
-  const hanldeLogin = (e) => {
+  // যদি ইউজার আগে থেকেই লগইন করা থাকে
+  useEffect(() => {
+    if (user) {
+      navigate("/");
+    }
+  }, [user, navigate]);
+
+  const handleLogin = (e) => {
     e.preventDefault();
     const email = e.target.email.value;
     const password = e.target.password.value;
+
     loginUser(email, password)
-      .then((result) => {
-        console.log(result);
-        Swal.fire({
-          position: "top-end",
-          icon: "success",
-          title: "Your work has been saved",
-          showConfirmButton: false,
-          timer: 1500,
-        });
+      .then(() => {
+        toast.success("Login successfully!");
+        navigate("/");
       })
-      .catch((error) => {
-        console.log(error);
+      .catch((err) => {
+        console.error(err);
+        setError("Invalid email or password!");
       });
   };
 
+  const googleLogin=()=>{
+    loginWithGoogle()
+    .then(result=>{
+      console.log(result)
+    })
+    .catch(err=>{
+        const errorCode = error.code;
+        const errorMessage = error.message;
+    })
+  }
+
   return (
     <div className="hero bg-base-200 min-h-screen">
-      <div className="card bg-base-100 w-full max-w-sm shrink-0 shadow-2xl">
+      <div className="card bg-base-100 w-full max-w-sm shadow-2xl">
         <div className="card-body">
-          <form onSubmit={hanldeLogin} className="fieldset">
-            <label className="label">Email</label>
+          <form onSubmit={handleLogin} className="fieldset">
+            {/* Email Field */}
+            <label className="label font-semibold">Email</label>
             <input
               type="email"
               required
               name="email"
-              className="input"
-              placeholder="Email"
+              className="input input-bordered"
+              placeholder="Enter your email"
             />
+
+            {/* Password Field */}
             <label className="label">Password</label>
-            <input
-              type="password"
-              name="password"
-              required
-              className="input"
-              placeholder="Password"
-            />
-            <div>
+            <div className="relative w-full">
+              <input
+                name="password"
+                type={showPassword ? "text" : "password"}
+                className="input"
+                placeholder="Type your password"
+                required
+              />
+              <span
+                className="absolute right-6 top-1/2 transform -translate-y-1/2 cursor-pointer text-gray-500"
+                onClick={() => setShowPassword(!showPassword)}
+              >
+                {showPassword ? (
+                  <FaRegEyeSlash size={20} />
+                ) : (
+                  <FaRegEye size={20} />
+                )}
+              </span>
+            </div>
+
+            {/* Error Message */}
+            {error && (
+              <p className="text-red-600 text-sm mt-2 font-medium">{error}</p>
+            )}
+
+            <div className="mt-3">
               <Link className="link text-blue-600 font-semibold link-hover">
                 Forgot password?
               </Link>
             </div>
+
             <button className="btn bg-gradient-to-r from-[#ab59cc] to-[#49acca] hover:from-[#49acca] hover:to-[#ab59cc] mt-4 text-white">
               Login
             </button>
-            <h1 className="font-semibold">
-              id you don't have an accout ! please{" "}
+
+            <h1 className="font-semibold mt-2 text-center">
+              Don’t have an account?{" "}
               <NavLink
                 to={"/register"}
                 className={"font-extrabold text-blue-600 hover:underline"}
@@ -65,7 +106,9 @@ const Login = () => {
               </NavLink>
             </h1>
           </form>
-          <button className="btn bg-white text-black border-[#e5e5e5]">
+
+          {/* Google Login */}
+          <button onClick={googleLogin} className="btn bg-white text-black border-[#e5e5e5] mt-4">
             <svg
               aria-label="Google logo"
               width="16"
@@ -74,7 +117,7 @@ const Login = () => {
               viewBox="0 0 512 512"
             >
               <g>
-                <path d="m0 0H512V512H0" fill="#fff"></path>
+                <path fill="#fff" d="m0 0H512V512H0"></path>
                 <path
                   fill="#34a853"
                   d="M153 292c30 82 118 95 171 60h62v48A192 192 0 0190 341"

@@ -1,32 +1,66 @@
+import React, { useContext, useState } from "react";
 import { Link, NavLink, useNavigate } from "react-router";
-import { use } from "react";
 import { AuthContext } from "../Context/AuthContext";
-
+import { toast } from "react-toastify";
+import { FaRegEye, FaRegEyeSlash } from "react-icons/fa";
 
 const Register = () => {
-    const {creatUser}=use(AuthContext)
-    const navigate= useNavigate();
+  const { creatUser, loginWithGoogle } = useContext(AuthContext);
+  const navigate = useNavigate();
+  const [error, setError] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
 
   const handleRegister = (e) => {
     e.preventDefault();
-    const email = e.target.email.value;
-    const password = e.target.password.value;
-    console.log(email,password)
-    creatUser(email,password)
-    .then(result=>{
-        console.log(result)
-         navigate(location.state || '/')
-    })
-    .catch(error=>{
-        console.log(error)
-    })
+    setError("");
 
+    const name = e.target.name.value;
+    const email = e.target.email.value;
+    const image = e.target.image.value;
+    const password = e.target.password.value;
+
+    if (password.length < 6) {
+      setError("Password must be at least 6 characters long.");
+      return;
+    }
+    const passwordPattern = /^(?=.*[A-Z])(?=.*\d)[A-Za-z\d]{6,}$/;
+    if (!passwordPattern.test(password)) {
+      setError(
+        "Password must be at least 6 characters long, include 1 uppercase letter and 1 number."
+      );
+      return;
+    }
+
+    creatUser(email, password, name, image)
+      .then((result) => {
+        toast.success("Account created successfully!");
+        navigate("/"); // Redirect to home
+      })
+      .catch((err) => {
+        console.log(err);
+        // Firebase email already in use error
+        if (err.code === "auth/email-already-in-use") {
+          setError("Email already in use!");
+        } else {
+          setError("Something went wrong. Please try again.");
+        }
+      });
   };
 
+  const googleLogin = () => {
+    loginWithGoogle()
+      .then((result) => {
+        console.log(result);
+      })
+      .catch((err) => {
+        const errorCode = error.code;
+        const errorMessage = error.message;
+      });
+  };
 
   return (
     <div className="hero bg-base-200 min-h-screen">
-      <div className="card bg-base-100 w-full max-w-sm shrink-0 shadow-2xl">
+      <div className="card bg-base-100 w-full max-w-sm shadow-2xl">
         <div className="card-body">
           <form onSubmit={handleRegister} className="fieldset">
             <label className="label">Name</label>
@@ -45,21 +79,41 @@ const Register = () => {
               placeholder="Email"
               required
             />
-            <label className="label">Phote URL</label>
+            <label className="label">Photo URL</label>
             <input
               name="image"
               type="text"
               className="input"
-              placeholder="Paste your img url"
+              placeholder="Paste your img URL"
               required
             />
+
             <label className="label">Password</label>
-            <input
-              type="password"
-              className="input"
-              placeholder="Password"
-              name="password"
-            />
+            <div className="relative w-full">
+              <input
+                name="password"
+                type={showPassword ? "text" : "password"}
+                className="input"
+                placeholder="Type your password"
+                required
+              />
+              <span
+                className="absolute right-6 top-1/2 transform -translate-y-1/2 cursor-pointer text-gray-500"
+                onClick={() => setShowPassword(!showPassword)}
+              >
+                {showPassword ? (
+                  <FaRegEyeSlash size={20} />
+                ) : (
+                  <FaRegEye size={20} />
+                )}
+              </span>
+            </div>
+
+            {/* Error message */}
+            {error && (
+              <p className="text-red-600 text-sm mt-2 font-medium">{error}</p>
+            )}
+
             <div>
               <Link className="link text-blue-600 font-semibold link-hover">
                 Forgot password?
@@ -69,8 +123,8 @@ const Register = () => {
               Register
             </button>
 
-            <h1 className="font-semibold">
-              id you already have an accout ! please{" "}
+            <h1 className="font-semibold mt-2 text-center">
+              Already have an account?{" "}
               <NavLink
                 to={"/login"}
                 className={"font-extrabold text-blue-600 hover:underline"}
@@ -79,7 +133,8 @@ const Register = () => {
               </NavLink>
             </h1>
           </form>
-          <button className="btn bg-white text-black border-[#e5e5e5]">
+
+          <button onClick={googleLogin} className="btn bg-white text-black border-[#e5e5e5] mt-4">
             <svg
               aria-label="Google logo"
               width="16"
@@ -88,7 +143,7 @@ const Register = () => {
               viewBox="0 0 512 512"
             >
               <g>
-                <path d="m0 0H512V512H0" fill="#fff"></path>
+                <path fill="#fff" d="m0 0H512V512H0"></path>
                 <path
                   fill="#34a853"
                   d="M153 292c30 82 118 95 171 60h62v48A192 192 0 0190 341"
