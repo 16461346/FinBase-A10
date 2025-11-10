@@ -7,7 +7,7 @@ const Feture = () => {
     <div className="container mx-auto my-16 py-16 px-4 sm:px-6 lg:px-20 bg-purple-950">
       {/* Heading */}
       <div className="text-center py-10">
-        <h2 className="text-3xl sm:text-4xl font-bold flex items-center justify-center gap-2 text-white">
+        <h2 className="text-2xl sm:text-4xl font-bold flex items-center justify-center gap-2 text-white">
           Explore Our Features <MdFeaturedPlayList />
         </h2>
         <p className="text-center text-sm sm:text-base text-gray-200 mt-2">

@@ -3,6 +3,10 @@ import { Link, NavLink } from "react-router";
 import Logo from "../../assets/pexels-tima-sfd-6694570-removebg-preview.png";
 import { AuthContext } from "../../Context/AuthContext";
 import { toast } from "react-toastify";
+import { CgProfile } from "react-icons/cg";
+import { IoSettingsOutline } from "react-icons/io5";
+import { IoMdLogOut } from "react-icons/io";
+import { MdLogout } from "react-icons/md";
 
 const Navbar = () => {
   const { user, logOutUser } = use(AuthContext);
@@ -86,7 +90,7 @@ const Navbar = () => {
         {user ? (
           <div className="dropdown dropdown-end">
             <label tabIndex={0} className="btn btn-ghost btn-circle avatar">
-              <div className="w-10 h-10 rounded-full overflow-hidden border-2 border-gray-300">
+              <div className="w-10 rounded-full">
                 <img
                   src={
                     user?.photoURL ||
@@ -101,13 +105,24 @@ const Navbar = () => {
               tabIndex={0}
               className="menu menu-compact dropdown-content mt-3 p-2 shadow bg-base-100 rounded-box w-52"
             >
-              <li className="text-xs">Name : {user.displayName}</li>
-              <li className="text-xs">Email : {user.email}</li>
-              <li
-                onClick={handleLogOut}
-                className="btn bg-[#2fcec1c9]  hover:bg-[#bb0baf71]"
-              >
-                Logout
+              <li>
+                <Link to="/profile">
+                  <CgProfile />
+                  Profile
+                </Link>
+              </li>
+              <li>
+                <Link to="/settings">
+                  <IoSettingsOutline />
+                  Settings
+                </Link>
+              </li>
+              <li>
+                <Link onClick={handleLogOut}>
+                  {" "}
+                  <MdLogout />
+                  Logout
+                </Link>
               </li>
             </ul>
           </div>

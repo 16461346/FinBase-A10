@@ -6,7 +6,7 @@ const Tips = () => {
     <div className="container pb-20 mx-auto">
       {/* Heading */}
       <div className="my-10 text-center">
-        <h1 className="text-2xl md:text-3xl lg:text-4xl  justify-center gap-2 flex items-center font-bold">
+        <h1 className="text-xl md:text-3xl lg:text-4xl  justify-center gap-2 flex items-center font-bold">
           Money Management Tips <MdOutlineTipsAndUpdates color="#3dd7c9" />
         </h1>
       </div>

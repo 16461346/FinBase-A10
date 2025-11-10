@@ -61,7 +61,7 @@ const Hero = () => {
                     <h1 className="text-white text-3xl md:text-5xl font-bold mb-4">
                       {slide.text}
                     </h1>
-                    <Link to={'/login'} className="btn transform transition-transform duration-300 hover:scale-105 flex bg-[#3ed7c9] hover:bg-[#e953df] w-40 mx-auto">
+                    <Link to={'/'} className="btn transform transition-transform duration-300 hover:scale-105 flex bg-[#3ed7c9] hover:bg-[#e953df] w-40 mx-auto">
                       Get Started
                     </Link>
                   </div>

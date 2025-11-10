@@ -8,6 +8,7 @@ import Login from "../Pages/Login";
 import Register from "../Pages/Register";
 import ErrorPage from "../Components/ErrorPage";
 import PrivetRoutes from "./PrivetRoutes";
+import Profile from "../Pages/Profile";
 
 export const router = createBrowserRouter([
   {
@@ -54,6 +55,10 @@ export const router = createBrowserRouter([
         path: "*",
         element: <ErrorPage />,
       },
+      {
+        path:"/profile",
+        element: <div className="flex justify-center items-center"><Profile/></div>
+      }
     ],
   },
 ]);
