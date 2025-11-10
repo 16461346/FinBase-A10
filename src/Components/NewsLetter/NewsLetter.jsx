@@ -59,7 +59,7 @@ const NewsLetter = () => {
 
         <button
           type="submit"
-          className="w-full sm:w-auto bg-white text-red-500 font-bold px-6 py-3  rounded-lg hover:bg-gray-300 transition"
+          className="w-full sm:w-auto bg-white text-black font-bold px-6 py-3  rounded-lg duration-300 hover:text-white hover:bg-purple-400 transition"
         >
           Subscribe
         </button>

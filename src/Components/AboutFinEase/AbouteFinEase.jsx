@@ -68,7 +68,7 @@ const AboutFinEase = () => {
           <div className="pt-6 text-center">
             <a
               href="#"
-              className="inline-block btn bg-[#3ed7c9] hover:bg-[#e953df] text-black font-semibold py-2 px-6 rounded-lg transition-all duration-300 hover:scale-105"
+              className="inline-block  bg-[#3ed7c9] hover:bg-purple-400 hover:text-white text-black font-semibold py-2 px-6 rounded-lg transition-all duration-300 hover:scale-105"
             >
               Read More
             </a>
