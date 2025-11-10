@@ -7,40 +7,53 @@ import Reports from "../Pages/Reports";
 import Login from "../Pages/Login";
 import Register from "../Pages/Register";
 import ErrorPage from "../Components/ErrorPage";
+import PrivetRoutes from "./PrivetRoutes";
 
 export const router = createBrowserRouter([
   {
     path: "/",
-    element: <MainLayout/>,
-    children:[
+    element: <MainLayout />,
+    children: [
       {
         index: true,
-        element:<Home/>
+        element: <Home />,
       },
       {
-        path: '/add-transaction',
-        element:<AddTransaction/>
+        path: "/add-transaction",
+        element: (
+          <PrivetRoutes>
+            <AddTransaction />
+          </PrivetRoutes>
+        ),
       },
       {
-        path: '/my-transaction',
-        element:<MyTransaction/>
+        path: "/my-transaction",
+        element: (
+          <PrivetRoutes>
+            <MyTransaction />
+          </PrivetRoutes>
+        ),
       },
       {
-        path: '/reports',
-        element:<Reports/>
+        path: "/reports",
+        element: (
+          <PrivetRoutes>
+            <Reports />
+          </PrivetRoutes>
+        ),
       },
       {
-        path: '/login',
-        element: <Login/>
+        path: "/login",
+        element: <Login />,
       },
       {
-        path:'/register',
-        element:<Register/>
+        path: "/register",
+        element: <Register />,
       },
       {
         path: "*",
-        element:<ErrorPage/>
-      }
-    ]
+        element: <ErrorPage />,
+      },
+    ],
   },
 ]);

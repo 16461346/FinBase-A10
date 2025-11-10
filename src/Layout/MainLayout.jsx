@@ -16,7 +16,7 @@ const MainLayout = () => {
       <footer>
         <Footer />
       </footer>
-      <ToastContainer position="top-center" autoClose={3000} />
+      <ToastContainer position="top-center" autoClose={2000} />
     </div>
   );
 };

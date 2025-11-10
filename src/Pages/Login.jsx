@@ -1,24 +1,26 @@
-import React, { useContext, useEffect, useState } from "react";
-import { Link, NavLink, useNavigate } from "react-router";
+import React, { use, useState } from "react";
+import { Link, NavLink, useLocation, useNavigate } from "react-router";
 import { AuthContext } from "../Context/AuthContext";
 import { toast } from "react-toastify";
 import { FaRegEye, FaRegEyeSlash } from "react-icons/fa";
 
 const Login = () => {
-  const { user, loginUser, loginWithGoogle, passwordReset } =
-    useContext(AuthContext);
-  const navigate = useNavigate();
+  const { loginUser, loginWithGoogle, passwordReset } = use(AuthContext);
+
   const [error, setError] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [email, setEmail] = useState("");
   const [resetE, setResetE] = useState("");
+  const location = useLocation();
+  const navigate = useNavigate();
+  // console.log(location);
 
   // যদি ইউজার আগে থেকেই লগইন করা থাকে
-  useEffect(() => {
-    if (user) {
-      navigate("/");
-    }
-  }, [user, navigate]);
+  // useEffect(() => {
+  //   if (user) {
+  //     navigate(location.state || "/");
+  //   }
+  // }, [user, navigate]);
 
   const handleLogin = (e) => {
     e.preventDefault();
@@ -27,8 +29,8 @@ const Login = () => {
 
     loginUser(email, password)
       .then(() => {
+        navigate(location.state || "/");
         toast.success("Login successfully!");
-        navigate("/");
       })
       .catch((err) => {
         console.error(err);
@@ -40,6 +42,7 @@ const Login = () => {
     loginWithGoogle()
       .then((result) => {
         console.log(result);
+        navigate(location.state || "/");
       })
       .catch((err) => {
         const errorCode = error.code;
@@ -55,6 +58,7 @@ const Login = () => {
     setResetE("");
     passwordReset(email)
       .then(() => {
+        navigate(location.state || "/");
         toast.success("Password reset email sent!");
       })
       .catch((error) => {
@@ -125,6 +129,7 @@ const Login = () => {
               Don’t have an account?{" "}
               <NavLink
                 to={"/register"}
+                state={location.state}
                 className={"font-extrabold text-blue-600 hover:underline"}
               >
                 Register

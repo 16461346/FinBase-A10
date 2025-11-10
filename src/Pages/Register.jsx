@@ -1,14 +1,16 @@
-import React, { useContext, useState } from "react";
-import { Link, NavLink, useNavigate } from "react-router";
+import React, { use, useState } from "react";
+import { Link, NavLink, useLocation, useNavigate } from "react-router";
 import { AuthContext } from "../Context/AuthContext";
 import { toast } from "react-toastify";
 import { FaRegEye, FaRegEyeSlash } from "react-icons/fa";
 
 const Register = () => {
-  const { creatUser, loginWithGoogle,updateUser } = useContext(AuthContext);
-  const navigate = useNavigate();
+  const { creatUser, loginWithGoogle,updateUser } = use(AuthContext);
   const [error, setError] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+  const navigate = useNavigate();
+  const location=useLocation();
+  console.log(location)
 
   const handleRegister = (e) => {
     e.preventDefault();
@@ -37,7 +39,7 @@ const Register = () => {
       })
       .then(() => {
         toast.success("Account created successfully!");
-        navigate("/");
+        navigate(location.state || '/')
       })
       .catch((err) => {
         console.log(err);
@@ -53,7 +55,8 @@ const Register = () => {
   const googleLogin = () => {
     loginWithGoogle()
       .then((result) => {
-        console.log(result);
+        // console.log(result);
+        navigate(location.state || '/')
       })
       .catch((err) => {
         const errorCode = error.code;
