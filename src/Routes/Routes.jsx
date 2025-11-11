@@ -10,6 +10,7 @@ import ErrorPage from "../Components/ErrorPage";
 import PrivetRoutes from "./PrivetRoutes";
 import Profile from "../Pages/Profile";
 import OverView from "../Pages/OverView";
+import TransactionDetails from "../Pages/TransactionDetails";
 
 export const router = createBrowserRouter([
   {
@@ -35,7 +36,7 @@ export const router = createBrowserRouter([
             <MyTransaction />
           </PrivetRoutes>
         ),
-        loader: ()=>fetch('http://localhost:3000/transactions')
+        loader: () => fetch("http://localhost:3000/transactions"),
       },
       {
         path: "/reports",
@@ -64,6 +65,16 @@ export const router = createBrowserRouter([
             <Profile />
           </div>
         ),
+      },
+      {
+        path: "/transaction-details/:id",
+        element: (
+          <PrivetRoutes>
+            <TransactionDetails />
+          </PrivetRoutes>
+        ),
+        loader: ({ params }) =>
+          fetch(`http://localhost:3000/transactions/${params.id}`),
       },
     ],
   },

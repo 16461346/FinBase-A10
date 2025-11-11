@@ -8,7 +8,7 @@ const Profile = () => {
     <div className="flex justify-center w-1/3 items-center py-10 px-4">
       <div className="relative w-full max-w-md bg-base-100 shadow-2xl rounded-2xl overflow-hidden backdrop-blur-md border border-gray-200">
         {/* Cover Background */}
-        <div className="absolute top-0 left-0 w-full h-40 bg-gradient-to-r from-purple-600 to-indigo-500 rounded-t-2xl"></div>
+        <div className="absolute top-0 left-0 w-full h-40 bg-gradient-to-r from-purple-400 to-[#3ed7ca94] rounded-t-2xl"></div>
 
         {/* Profile Image */}
         <div className="relative flex justify-center">
@@ -37,7 +37,7 @@ const Profile = () => {
 
         {/* Update Profile Button */}
         <div className="px-6 pb-6">
-          <button className="btn w-full bg-gradient-to-r from-gray-700 to-gray-500 text-white border-none hover:brightness-110 hover:-translate-y-1 transition-transform duration-200">
+          <button className="btn w-full bg-[#3ed7c9] text-black hover:bg-purple-400 hover:text-white border-none hover:brightness-110 hover:-translate-y-1 transition-all duration-300">
             Update Profile
           </button>
         </div>

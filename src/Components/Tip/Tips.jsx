@@ -15,7 +15,7 @@ const Tips = () => {
       <div className="card lg:card-side bg-base-100 shadow-sm rounded-2xl transform transition duration-300 hover:shadow-xl hover:scale-105">
         {/* Text Section */}
         <div className="card-body pl-10">
-          <ol className="list-decimal list-inside text-gray-600 space-y-2 mb-4">
+          <ol className="list-decimal list-inside space-y-2 mb-4">
             <li>
               <strong>Track Your Expenses:</strong>Record your daily or weekly
               expenses to understand which categories you spend the most on.

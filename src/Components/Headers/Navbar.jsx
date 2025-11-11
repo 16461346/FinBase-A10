@@ -6,18 +6,18 @@ import { toast } from "react-toastify";
 import { CgProfile } from "react-icons/cg";
 import { IoSettingsOutline } from "react-icons/io5";
 import { MdLogout } from "react-icons/md";
+import { TbCurrencyTaka } from "react-icons/tb";
 
 const Navbar = () => {
   const { user, logOutUser } = use(AuthContext);
-  console.log(user);
 
   const handleLogOut = () => {
     logOutUser()
       .then(() => {
-        toast.success("Log Out Successfull");
+        toast.success("Log Out Successful");
       })
-      .catch((error) => {
-        toast.error("Somthing went wrong");
+      .catch(() => {
+        toast.error("Something went wrong");
       });
   };
 
@@ -39,55 +39,11 @@ const Navbar = () => {
   );
 
   return (
-    <nav className=" container mx-auto shadow-md navbar bg-base-100 px-4">
-      {/* Left: Logo + Hamburger */}
+    <nav className="container mx-auto shadow-md navbar bg-base-100 px-4">
+      {/* Left: Profile/Login */}
       <div className="navbar-start">
-        {/* Mobile Hamburger */}
-        <div className="dropdown">
-          <label tabIndex={0} className="btn btn-ghost lg:hidden">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="h-5 w-5"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-                d="M4 6h16M4 12h8m-8 6h16"
-              />
-            </svg>
-          </label>
-          <ul
-            tabIndex={0}
-            className="menu menu-compact dropdown-content mt-3 p-2 shadow bg-base-100 rounded-box w-52"
-          >
-            {links}
-          </ul>
-        </div>
-
-        {/* Logo */}
-        <Link to="/" className="flex flex-col items-center">
-          <img
-            src={Logo}
-            alt="FinEase Logo"
-            className="h-8 w-8 rounded-2xl object-contain"
-          />
-          <h2 className="text-sm logo-text font-semibold">FinEase</h2>
-        </Link>
-      </div>
-
-      {/* Center: Desktop Menu */}
-      <div className="navbar-center hidden lg:flex">
-        <ul className="menu menu-horizontal px-1">{links}</ul>
-      </div>
-
-      {/* Right: Profile Dropdown */}
-      <div className="navbar-end">
         {user ? (
-          <div className="dropdown dropdown-end">
+          <div className="dropdown dropdown-start">
             <label tabIndex={0} className="btn btn-ghost btn-circle avatar">
               <div className="w-10 rounded-full">
                 <img
@@ -118,7 +74,6 @@ const Navbar = () => {
               </li>
               <li>
                 <Link onClick={handleLogOut}>
-                  {" "}
                   <MdLogout />
                   Logout
                 </Link>
@@ -130,6 +85,61 @@ const Navbar = () => {
             Log In
           </NavLink>
         )}
+        {user ? (
+          <div className="text-xs sm:text-sm md:text-base lg:text-lg pl-1 sm:pl-2 leading-4">
+            <p className="font-medium">{user?.displayName}</p>
+            <h2 className="flex font-bold justify-center items-center sm:gap-0">
+              <span>Total : 2000</span>
+              <TbCurrencyTaka className="inline" />
+            </h2>
+          </div>
+        ) : (
+          ""
+        )}
+      </div>
+
+      {/* Center: Links */}
+      <div className="navbar-center hidden lg:flex">
+        <ul className="menu menu-horizontal px-1">{links}</ul>
+      </div>
+
+      {/* Right: Logo */}
+      <div className="navbar-end">
+        {/* Mobile Hamburger */}
+        <div className="dropdown lg:hidden">
+          <label tabIndex={0} className="btn btn-ghost">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="h-5 w-5"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                d="M4 6h16M4 12h8m-8 6h16"
+              />
+            </svg>
+          </label>
+          <ul
+            tabIndex={0}
+            className="menu menu-compact dropdown-content mt-3 p-2 shadow bg-base-100 rounded-box w-52 right-0"
+          >
+            {links}
+          </ul>
+        </div>
+
+        {/* Logo */}
+        <Link to="/" className="flex flex-col items-center ml-3">
+          <img
+            src={Logo}
+            alt="FinEase Logo"
+            className="h-8 w-8 rounded-2xl object-contain"
+          />
+          <h2 className="text-sm logo-text font-semibold">FinEase</h2>
+        </Link>
       </div>
     </nav>
   );

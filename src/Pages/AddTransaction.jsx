@@ -31,6 +31,7 @@ const AddTransaction = () => {
     "Savings",
     "Other",
   ];
+  const today = new Date().toISOString().split("T")[0];
 
   const categories =
     type === "Income"
@@ -59,9 +60,9 @@ const AddTransaction = () => {
         "Content-Type": "application/json",
       },
       body: JSON.stringify(formData),
-    })
-      .then((res) => res.json())
-      toast.success('Trasaction added success')
+    }).then((res) => res.json());
+    toast
+      .success("Trasaction added success")
       .then((data) => {
         console.log(data);
       })
@@ -72,11 +73,11 @@ const AddTransaction = () => {
 
   return (
     <div
-      className="card w-[520px] h-auto mt-10 mb-20 mx-auto 
+      className="card w-[350px] md:w-[520px] h-auto mt-10 mb-20 mx-auto 
       bg-gradient-to-r from-cyan-200 to-purple-300  
       p-6 rounded-xl shadow-2xl"
     >
-      <h2 className="text-2xl text-black font-bold text-center mb-4">
+      <h2 className="text-xl sm:text-2xl md:text-3xl text-black font-bold text-center mb-4">
         Add Your Transaction
       </h2>
 
@@ -85,7 +86,7 @@ const AddTransaction = () => {
         <div className="flex gap-4">
           <div className="w-2/3">
             <label className="label">
-              <span className="label-text text-black text-sm">
+              <span className="label-text text-black text-[15px]">
                 Transaction Type
               </span>
             </label>
@@ -97,7 +98,7 @@ const AddTransaction = () => {
                 setType(e.target.value);
                 setCategory(""); // reset category on type change
               }}
-              className="input w-full text-sm border border-gray-300 focus:outline-none focus:ring-2 focus:ring-teal-400"
+              className="input h-6 sm:h-7 md:h-10 text-[12px] w-full  md:text-sm border border-gray-300 focus:outline-none focus:ring-2 focus:ring-teal-400"
             >
               <option value="" disabled>
                 Select Type
@@ -109,7 +110,7 @@ const AddTransaction = () => {
 
           <div className="w-1/3">
             <label className="label">
-              <span className="label-text text-black text-sm">Amount</span>
+              <span className="label-text text-black text-[15px]">Amount</span>
             </label>
             <input
               required
@@ -117,7 +118,7 @@ const AddTransaction = () => {
               type="number"
               min={0}
               placeholder="Enter amount"
-              className="input w-full text-sm border border-gray-300 focus:outline-none focus:ring-2 focus:ring-teal-400"
+              className="input h-6 sm:h-7 md:h-10 text-[12px] p-2 md:text-sm w-full text-sm border border-gray-300 focus:outline-none focus:ring-2 focus:ring-teal-400"
             />
           </div>
         </div>
@@ -126,26 +127,27 @@ const AddTransaction = () => {
         <div className="flex gap-4">
           <div className="w-1/2">
             <label className="label">
-              <span className="label-text text-black text-sm">Date</span>
+              <span className="label-text text-black text-[15px]">Date</span>
             </label>
             <input
               required
               name="date"
               type="date"
-              className="input w-full text-sm border border-gray-300 focus:outline-none focus:ring-2 focus:ring-teal-400"
+              defaultValue={today} 
+              className="input h-6 sm:h-7 md:h-10 text-[12px] p-2 md:text-sm w-full text-sm border border-gray-300 focus:outline-none focus:ring-2 focus:ring-teal-400"
             />
           </div>
 
           <div className="w-1/2">
             <label className="label">
-              <span className="label-text text-black text-sm">Category</span>
+              <span className="label-text text-black text-[15px]">Category</span>
             </label>
             <select
               required
               name="category"
               value={category}
               onChange={(e) => setCategory(e.target.value)}
-              className="input w-full text-sm border border-gray-300 focus:outline-none focus:ring-2 focus:ring-teal-400"
+              className="input h-6 sm:h-7 md:h-10 text-[12px]  md:text-sm w-full text-sm border border-gray-300 focus:outline-none focus:ring-2 focus:ring-teal-400"
             >
               <option value="" disabled>
                 Select Category
@@ -162,47 +164,48 @@ const AddTransaction = () => {
         {/* User Email & Name */}
         <div>
           <label className="label">
-            <span className="label-text text-black text-sm">User Email</span>
+            <span className="label-text text-black text-[15px]">User Email</span>
           </label>
           <input
             readOnly
             name="email"
             type="text"
             value={user?.email || ""}
-            className="input w-full text-sm border border-gray-300 focus:outline-none focus:ring-2 focus:ring-teal-400"
+            className="input h-6 sm:h-7 md:h-10 text-[12px] p-2 md:text-sm w-full text-sm border border-gray-300 focus:outline-none focus:ring-2 focus:ring-teal-400"
           />
         </div>
 
         <div>
           <label className="label">
-            <span className="label-text text-black text-sm">User Name</span>
+            <span className="label-text text-black text-[15px]">User Name</span>
           </label>
           <input
             readOnly
             name="name"
             type="text"
             value={user?.displayName || ""}
-            className="input w-full text-sm border border-gray-300 focus:outline-none focus:ring-2 focus:ring-teal-400"
+            className="input h-6 sm:h-7 md:h-10 text-[12px] p-2 md:text-sm w-full text-sm border border-gray-300 focus:outline-none focus:ring-2 focus:ring-teal-400"
           />
         </div>
 
         {/* Description */}
         <div>
           <label className="label">
-            <span className="label-text text-black text-sm">Description</span>
+            <span className="label-text text-black text-[15px]">Description</span>
           </label>
           <textarea
             required
             name="description"
             placeholder="Enter description"
-            className="input w-full text-sm border border-gray-300 focus:outline-none focus:ring-2 focus:ring-teal-400"
+            rows={6} // শুরুতে 3 লাইন উচ্চতা
+            className="input  h-16 md:h-20 lg:h-22 w-full text-[13px] md:text-sm border border-gray-300 focus:outline-none focus:ring-2 focus:ring-teal-400 resize-none overflow-hidden break-words whitespace-normal"
           />
         </div>
 
         {/* Submit Button */}
         <button
           type="submit"
-          className="w-full bg-teal-400 hover:bg-purple-400 text-black font-semibold hover:text-white py-2 px-6 rounded-lg transition-all duration-300 hover:scale-101"
+          className="w-full bg-teal-400 hover:bg-purple-400 text-black font-semibold hover:text-white py-2 px-6 text-[16px] md:text-[20px] rounded-lg transition-all duration-300 hover:scale-101"
         >
           Add Transaction
         </button>
