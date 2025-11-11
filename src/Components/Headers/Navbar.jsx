@@ -5,7 +5,6 @@ import { AuthContext } from "../../Context/AuthContext";
 import { toast } from "react-toastify";
 import { CgProfile } from "react-icons/cg";
 import { IoSettingsOutline } from "react-icons/io5";
-import { IoMdLogOut } from "react-icons/io";
 import { MdLogout } from "react-icons/md";
 
 const Navbar = () => {
@@ -40,7 +39,7 @@ const Navbar = () => {
   );
 
   return (
-    <nav className="sticky top-0 z-50 container mx-auto shadow-md navbar bg-base-100 px-4">
+    <nav className=" container mx-auto shadow-md navbar bg-base-100 px-4">
       {/* Left: Logo + Hamburger */}
       <div className="navbar-start">
         {/* Mobile Hamburger */}

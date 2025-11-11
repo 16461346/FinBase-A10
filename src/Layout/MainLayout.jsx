@@ -7,9 +7,10 @@ import { ToastContainer } from "react-toastify";
 const MainLayout = () => {
   return (
     <div className="flex flex-col min-h-screen">
-      <header>
+      <header className="sticky top-0 z-50 bg-white shadow-md">
         <Navbar />
       </header>
+
       <main className="flex-1">
         <Outlet />
       </main>

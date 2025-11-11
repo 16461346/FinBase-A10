@@ -15,6 +15,20 @@
   transition: background 0.3s ease;
 }
 
+/* in your global.css or tailwind.css */
+.btn-custom {
+  @apply btn btn-sm btn-outline flex items-center gap-1 mx-auto;
+  border-color: #755eb9;   /* outline */
+  color: #A78BFA;          /* text */
+}
+
+.btn-custom:hover {
+  background-color: #00d4c3;  /* hover bg */
+  border-color: #00d4c3;      /* hover border */
+  color: black;               /* hover text */
+}
+
+
 
 .
 

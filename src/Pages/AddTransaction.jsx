@@ -1,6 +1,11 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
+import { AuthContext } from "../Context/AuthContext";
+import { toast } from "react-toastify";
 
 const AddTransaction = () => {
+  const { user } = useContext(AuthContext);
+
+  // State
   const [type, setType] = useState(""); // Income / Expense
   const [category, setCategory] = useState("");
 
@@ -14,6 +19,7 @@ const AddTransaction = () => {
     "Scholarship",
     "Other",
   ];
+
   const expenseCategories = [
     "Rent",
     "Health",
@@ -33,51 +39,91 @@ const AddTransaction = () => {
       ? expenseCategories
       : [];
 
+  // Form submit handler
+  const handleAdd = (e) => {
+    e.preventDefault();
+    const E = e.target;
+
+    const formData = {
+      type, // from state
+      date: E.date.value,
+      category: E.category.value,
+      email: user?.email,
+      name: user?.displayName,
+      amount: E.amount.value,
+      description: E.description.value,
+    };
+    fetch("http://localhost:3000/transactions", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(formData),
+    })
+      .then((res) => res.json())
+      toast.success('Trasaction added success')
+      .then((data) => {
+        console.log(data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
   return (
-    <div className="card w-[520px] h-auto mt-10 mb-20 mx-auto 
+    <div
+      className="card w-[520px] h-auto mt-10 mb-20 mx-auto 
       bg-gradient-to-r from-cyan-200 to-purple-300  
-      p-6 rounded-xl shadow-2xl">
-      
-      <h2 className="text-2xl text-black font-bold text-center mb-4 ">
+      p-6 rounded-xl shadow-2xl"
+    >
+      <h2 className="text-2xl text-black font-bold text-center mb-4">
         Add Your Transaction
       </h2>
 
-      <form className="space-y-4">
-        {/* Radio Buttons */}
-        <div className="flex items-center space-x-6">
-          <label className="flex items-center space-x-2">
-            <input
-              type="radio"
-              name="t-type"
-              value="Income"
-              checked={type === "Income"}
+      <form className="space-y-4" onSubmit={handleAdd}>
+        {/* Transaction Type & Amount */}
+        <div className="flex gap-4">
+          <div className="w-2/3">
+            <label className="label">
+              <span className="label-text text-black text-sm">
+                Transaction Type
+              </span>
+            </label>
+            <select
+              required
+              name="t_type"
+              value={type}
               onChange={(e) => {
                 setType(e.target.value);
-                setCategory("");
+                setCategory(""); // reset category on type change
               }}
-              className="w-5 h-5 accent-teal-400"
-            />
-            <span className="text-black">Income</span>
-          </label>
+              className="input w-full text-sm border border-gray-300 focus:outline-none focus:ring-2 focus:ring-teal-400"
+            >
+              <option value="" disabled>
+                Select Type
+              </option>
+              <option value="Income">Income</option>
+              <option value="Expense">Expense</option>
+            </select>
+          </div>
 
-          <label className="flex items-center space-x-2">
+          <div className="w-1/3">
+            <label className="label">
+              <span className="label-text text-black text-sm">Amount</span>
+            </label>
             <input
-              type="radio"
-              name="t-type"
-              value="Expense"
-              checked={type === "Expense"}
-              onChange={(e) => {
-                setType(e.target.value);
-                setCategory("");
-              }}
-              className="w-5 h-5 accent-pink-400"
+              required
+              name="amount"
+              type="number"
+              min={0}
+              placeholder="Enter amount"
+              className="input w-full text-sm border border-gray-300 focus:outline-none focus:ring-2 focus:ring-teal-400"
             />
-            <span className="text-black">Expense</span>
-          </label>
+          </div>
         </div>
 
-        {/* Date and Category */}
-        <div className="flex justify-between gap-4">
+        {/* Date & Category */}
+        <div className="flex gap-4">
           <div className="w-1/2">
             <label className="label">
               <span className="label-text text-black text-sm">Date</span>
@@ -99,13 +145,13 @@ const AddTransaction = () => {
               name="category"
               value={category}
               onChange={(e) => setCategory(e.target.value)}
-           className="input w-full text-sm border border-gray-300 focus:outline-none focus:ring-2 focus:ring-teal-400"
+              className="input w-full text-sm border border-gray-300 focus:outline-none focus:ring-2 focus:ring-teal-400"
             >
               <option value="" disabled>
                 Select Category
               </option>
-              {categories.map((cat, index) => (
-                <option key={index} value={cat}>
+              {categories.map((cat, i) => (
+                <option key={i} value={cat}>
                   {cat}
                 </option>
               ))}
@@ -122,8 +168,8 @@ const AddTransaction = () => {
             readOnly
             name="email"
             type="text"
-            placeholder="User email"
-           className="input w-full text-sm border border-gray-300 focus:outline-none focus:ring-2 focus:ring-teal-400"
+            value={user?.email || ""}
+            className="input w-full text-sm border border-gray-300 focus:outline-none focus:ring-2 focus:ring-teal-400"
           />
         </div>
 
@@ -135,23 +181,8 @@ const AddTransaction = () => {
             readOnly
             name="name"
             type="text"
-            placeholder="User Name"
-           className="input w-full text-sm border border-gray-300 focus:outline-none focus:ring-2 focus:ring-teal-400"
-          />
-        </div>
-
-        {/* Amount */}
-        <div>
-          <label className="label">
-            <span className="label-text text-black text-sm">Amount</span>
-          </label>
-          <input
-            required
-            name="amount"
-            type="number"
-            min={0}
-            placeholder="Your expense/income amount"
-          className="input w-full text-sm border border-gray-300 focus:outline-none focus:ring-2 focus:ring-teal-400"
+            value={user?.displayName || ""}
+            className="input w-full text-sm border border-gray-300 focus:outline-none focus:ring-2 focus:ring-teal-400"
           />
         </div>
 
@@ -164,12 +195,15 @@ const AddTransaction = () => {
             required
             name="description"
             placeholder="Enter description"
-         className="input w-full text-sm border border-gray-300 focus:outline-none focus:ring-2 focus:ring-teal-400"
-          ></textarea>
+            className="input w-full text-sm border border-gray-300 focus:outline-none focus:ring-2 focus:ring-teal-400"
+          />
         </div>
 
         {/* Submit Button */}
-        <button className="w-full bg-teal-400 hover:bg-purple-400 text-black font-semibold hover:text-white py-2 px-6 rounded-lg transition-all duration-300  hover:scale-101">
+        <button
+          type="submit"
+          className="w-full bg-teal-400 hover:bg-purple-400 text-black font-semibold hover:text-white py-2 px-6 rounded-lg transition-all duration-300 hover:scale-101"
+        >
           Add Transaction
         </button>
       </form>

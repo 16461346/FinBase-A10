@@ -35,6 +35,7 @@ export const router = createBrowserRouter([
             <MyTransaction />
           </PrivetRoutes>
         ),
+        loader: ()=>fetch('http://localhost:3000/transactions')
       },
       {
         path: "/reports",
