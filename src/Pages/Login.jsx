@@ -28,9 +28,28 @@ const Login = () => {
     const password = e.target.password.value;
 
     loginUser(email, password)
-      .then(() => {
-        navigate(location.state || "/");
-        toast.success("Login successfully!");
+      .then((result) => {
+        const user = result.user;
+        const newUser = {
+          name: user.displayName,
+          email: user.email,
+          image: user.photoURL,
+        };
+        fetch(`http://localhost:3000/users`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(newUser),
+        })
+          .then((res) => res.json())
+          .then((data) => {
+            toast.success("Login successfully!");
+            navigate(location.state || "/");
+          })
+          .catch(error=>{
+            console.log(error)
+          })
       })
       .catch((err) => {
         console.error(err);
@@ -41,8 +60,28 @@ const Login = () => {
   const googleLogin = () => {
     loginWithGoogle()
       .then((result) => {
-        console.log(result);
-        navigate(location.state || "/");
+        const user = result.user;
+
+        const newUser = {
+          name: user.displayName,
+          email: user.email,
+          image: user.photoURL,
+        };
+        fetch(`http://localhost:3000/users`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(newUser),
+        })
+          .then((res) => res.json())
+          .then((data) => {
+            toast.success("Login Success");
+            navigate(location.state || "/");
+          })
+          .cetch((err) => {
+            console.log(err);
+          });
       })
       .catch((err) => {
         const errorCode = error.code;
@@ -67,7 +106,7 @@ const Login = () => {
   };
 
   return (
-    <div className="hero bg-base-200 min-h-screen">
+    <div className="hero  bg-base-200 md:min-h-screen">
       <div className="card bg-base-100 w-full max-w-sm shadow-2xl">
         <div className="card-body">
           <form onSubmit={handleLogin} className="fieldset">

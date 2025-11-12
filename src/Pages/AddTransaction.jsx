@@ -48,7 +48,7 @@ const AddTransaction = () => {
 
 
     const inputDate = E.date.value; // "2025-11-12"
-    const jsonDate = new Date(inputDate + "T00:00:00Z").toISOString(); // ✅ 
+    const jsonDate = new Date(inputDate + "T00:00:00Z").toISOString();  
 
     const formData = {
       type,
@@ -72,10 +72,10 @@ const AddTransaction = () => {
       const data = await res.json();
 
       if (data.success) {
-        toast.success("Transaction added successfully ✅");
+        toast.success("Transaction added successfully");
         navigate("/my-transaction");
       } else {
-        toast.error("Failed to add transaction ❌");
+        toast.error("Failed to add transaction ");
       }
     } catch (err) {
       console.error(err);

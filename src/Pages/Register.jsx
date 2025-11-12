@@ -5,13 +5,13 @@ import { toast } from "react-toastify";
 import { FaRegEye, FaRegEyeSlash } from "react-icons/fa";
 
 const Register = () => {
-  const { creatUser, loginWithGoogle,updateUser } = use(AuthContext);
+  const { creatUser, loginWithGoogle, updateUser } = use(AuthContext);
   const [error, setError] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
-  const location=useLocation();
-  console.log(location)
+  const location = useLocation();
 
+  // 🔹 Register Handler
   const handleRegister = (e) => {
     e.preventDefault();
     setError("");
@@ -21,29 +21,48 @@ const Register = () => {
     const image = e.target.image.value;
     const password = e.target.password.value;
 
+    // 🔹 Password validation
     if (password.length < 6) {
       setError("Password must be at least 6 characters long.");
       return;
     }
+
     const passwordPattern = /^(?=.*[A-Z])(?=.*\d)[A-Za-z\d]{6,}$/;
     if (!passwordPattern.test(password)) {
       setError(
-        "Password must be at least 6 characters long, include 1 uppercase letter and 1 number."
+        "Password must include 1 uppercase letter and 1 number."
       );
       return;
     }
 
+    // 🔹 Firebase user creation
     creatUser(email, password)
-      .then((result)=>{
-        return updateUser(name,image)
+      .then((result) => {
+        const createdUser = result.user;
+        return updateUser(name, image).then(() => createdUser);
       })
-      .then(() => {
-        toast.success("Account created successfully!");
-        navigate(location.state || '/')
+      .then((user) => {
+        const newUser = {
+          name: name,
+          email: user.email,
+          image: user.photoURL || image,
+        };
+
+        return fetch(`http://localhost:3000/users`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(newUser),
+        });
+      })
+      .then((res) => res.json())
+      .then((data) => {
+        toast.success("Registered successfully!");
+        navigate(location.state?.from || "/");
       })
       .catch((err) => {
-        console.log(err);
-        // Firebase email already in use error
+        console.error(err);
         if (err.code === "auth/email-already-in-use") {
           setError("Email already in use!");
         } else {
@@ -52,59 +71,81 @@ const Register = () => {
       });
   };
 
+  // 🔹 Google Login Handler
   const googleLogin = () => {
     loginWithGoogle()
       .then((result) => {
-        // console.log(result);
-        navigate(location.state || '/')
+        const user = result.user;
+        const newUser = {
+          name: user.displayName || "Google User",
+          email: user.email,
+          image: user.photoURL,
+        };
+
+        fetch(`http://localhost:3000/users`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(newUser),
+        })
+          .then((res) => res.json())
+          .then(() => {
+            toast.success("Login successfully!");
+            navigate(location.state?.from || "/");
+          })
+          .catch((error) => console.error(error));
       })
-      .catch((err) => {
-        const errorCode = error.code;
-        const errorMessage = error.message;
+      .catch((error) => {
+        console.error(error.message);
+        setError("Google login failed.");
       });
   };
 
   return (
-    <div className="hero bg-base-200 min-h-screen">
+    <div className="hero bg-base-200 min-h-screen flex justify-center items-center">
       <div className="card bg-base-100 w-full max-w-sm shadow-2xl">
         <div className="card-body">
-          <form onSubmit={handleRegister} className="fieldset">
+          <h2 className="text-2xl font-bold text-center mb-2">Register</h2>
+          <form onSubmit={handleRegister}>
             <label className="label">Name</label>
             <input
               name="name"
               type="text"
-              className="input"
+              className="input input-bordered w-full"
               placeholder="Type your name"
               required
             />
+
             <label className="label">Email</label>
             <input
               name="email"
               type="email"
-              className="input"
+              className="input input-bordered w-full"
               placeholder="Email"
               required
             />
+
             <label className="label">Photo URL</label>
             <input
               name="image"
               type="text"
-              className="input"
-              placeholder="Paste your img URL"
+              className="input input-bordered w-full"
+              placeholder="Paste your image URL"
               required
             />
 
             <label className="label">Password</label>
-            <div className="relative w-full">
+            <div className="relative">
               <input
                 name="password"
                 type={showPassword ? "text" : "password"}
-                className="input"
+                className="input input-bordered w-full"
                 placeholder="Type your password"
                 required
               />
               <span
-                className="absolute right-6 top-1/2 transform -translate-y-1/2 cursor-pointer text-gray-500"
+                className="absolute right-4 top-1/2 transform -translate-y-1/2 cursor-pointer text-gray-500"
                 onClick={() => setShowPassword(!showPassword)}
               >
                 {showPassword ? (
@@ -115,54 +156,37 @@ const Register = () => {
               </span>
             </div>
 
-            {/* Error message */}
-            {error && (
-              <p className="text-red-600 text-sm mt-2 font-medium">{error}</p>
-            )}
+            {error && <p className="text-red-600 text-sm mt-2">{error}</p>}
 
-            <button className="btn bg-gradient-to-r from-[#ab59cc] to-[#49acca] hover:from-[#49acca] hover:to-[#ab59cc] mt-4 text-white">
+            <button
+              type="submit"
+              className="btn w-full bg-gradient-to-r from-[#ab59cc] to-[#49acca] hover:from-[#49acca] hover:to-[#ab59cc] mt-4 text-white"
+            >
               Register
             </button>
+          </form>
 
-            <h1 className="font-semibold mt-2 text-center">
+          <div className="text-center mt-3">
+            <p>
               Already have an account?{" "}
               <NavLink
-                to={"/login"}
-                className={"font-extrabold text-blue-600 hover:underline"}
+                to="/login"
+                className="font-bold text-blue-600 hover:underline"
               >
                 Login
               </NavLink>
-            </h1>
-          </form>
+            </p>
+          </div>
 
-          <button onClick={googleLogin} className="btn bg-white text-black border-[#e5e5e5] mt-4">
-            <svg
-              aria-label="Google logo"
-              width="16"
-              height="16"
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 512 512"
-            >
-              <g>
-                <path fill="#fff" d="m0 0H512V512H0"></path>
-                <path
-                  fill="#34a853"
-                  d="M153 292c30 82 118 95 171 60h62v48A192 192 0 0190 341"
-                ></path>
-                <path
-                  fill="#4285f4"
-                  d="m386 400a140 175 0 0053-179H260v74h102q-7 37-38 57"
-                ></path>
-                <path
-                  fill="#fbbc02"
-                  d="m90 341a208 200 0 010-171l63 49q-12 37 0 73"
-                ></path>
-                <path
-                  fill="#ea4335"
-                  d="m153 219c22-69 116-109 179-50l55-54c-78-75-230-72-297 55"
-                ></path>
-              </g>
-            </svg>
+          <button
+            onClick={googleLogin}
+            className="btn w-full bg-white border border-gray-200 text-black mt-4 flex items-center justify-center gap-2"
+          >
+            <img
+              src="https://www.svgrepo.com/show/355037/google.svg"
+              alt="Google"
+              className="w-5 h-5"
+            />
             Login with Google
           </button>
         </div>
