@@ -12,6 +12,7 @@ import Profile from "../Pages/Profile";
 import OverView from "../Pages/OverView";
 import TransactionDetails from "../Pages/TransactionDetails";
 import UpdateTransaction from "../Pages/UpdateTransaction";
+import UpdateProfile from "../Pages/UpdateProfile";
 
 export const router = createBrowserRouter([
   {
@@ -87,6 +88,14 @@ export const router = createBrowserRouter([
         ),
         loader: ({ params }) =>
           fetch(`http://localhost:3000/transactions/${params.id}`),
+      },
+      {
+        path: "/update-profile",
+        element: (
+          <PrivetRoutes>
+            <UpdateProfile />
+          </PrivetRoutes>
+        ),
       },
     ],
   },
