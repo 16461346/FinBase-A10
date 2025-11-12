@@ -61,7 +61,7 @@ const Hero = () => {
                     <h1 className="text-white text-3xl md:text-5xl font-bold mb-4">
                       {slide.text}
                     </h1>
-                    <Link to={'/'} className="inline-block bg-[#3ed7c9] hover:bg-purple-400 hover:text-white text-black font-semibold py-2 px-6 rounded-lg transition-all duration-300 hover:scale-105">
+                    <Link to={'/'} className="inline-block bg-[#3ed7c9] hover:bg-purple-400 hover:text-white text-black font-semibold py-2 px-6 rounded-lg c">
                       Get Started
                     </Link>
                   </div>

@@ -1,49 +1,57 @@
 import React, { useEffect, useState } from "react";
 import { AuthContext } from "./AuthContext";
-import { createUserWithEmailAndPassword, onAuthStateChanged, sendPasswordResetEmail, signInWithEmailAndPassword, signInWithPopup, signOut, updateProfile } from "firebase/auth";
+import {
+  createUserWithEmailAndPassword,
+  onAuthStateChanged,
+  sendPasswordResetEmail,
+  signInWithEmailAndPassword,
+  signInWithPopup,
+  signOut,
+  updateProfile,
+} from "firebase/auth";
 import { auth, provider } from "../firebase/firebase.config";
 
 const AuthProvider = ({ children }) => {
-  const [user,setUser]=useState(null);
-const [loading, setLoading] = useState(true); 
+  const [user, setUser] = useState(null);
+  const [totalMoney, setTotalMoney] = useState(0);
+  const [loading, setLoading] = useState(true);
 
   const creatUser = (email, password) => {
     return createUserWithEmailAndPassword(auth, email, password);
   };
 
-  const updateUser=(name, image)=>{
-    return updateProfile(auth.currentUser,{
-      displayName:name,
-      photoURL:image,
-    })
-  }
+  const updateUser = (name, image) => {
+    return updateProfile(auth.currentUser, {
+      displayName: name,
+      photoURL: image,
+    });
+  };
 
-  const loginUser=(email,password)=>{
-    return signInWithEmailAndPassword (auth,email,password);
-  }
+  const loginUser = (email, password) => {
+    return signInWithEmailAndPassword(auth, email, password);
+  };
 
-  const logOutUser=()=>{
+  const logOutUser = () => {
     return signOut(auth);
-  }
+  };
 
-  const loginWithGoogle=()=>{
-    return signInWithPopup(auth,provider)
-  }
+  const loginWithGoogle = () => {
+    return signInWithPopup(auth, provider);
+  };
 
-  const passwordReset=(email)=>{
-    return sendPasswordResetEmail(auth,email)
-  }
+  const passwordReset = (email) => {
+    return sendPasswordResetEmail(auth, email);
+  };
 
-  useEffect(()=>{
-    const unsubscribe=onAuthStateChanged(auth,(currentUser)=>{
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
       setUser(currentUser);
       setLoading(false);
-
-    })
-    return ()=>{
+    });
+    return () => {
       unsubscribe();
-    }
-  },[]);
+    };
+  }, []);
 
   const authInfo = {
     updateUser,
@@ -54,13 +62,11 @@ const [loading, setLoading] = useState(true);
     loginUser,
     user,
     loading,
+    totalMoney,
+    setTotalMoney,
   };
 
-  return (
-    <AuthContext value={authInfo}>
-      {children}
-    </AuthContext>
-  );
+  return <AuthContext value={authInfo}>{children}</AuthContext>;
 };
 
 export default AuthProvider;
