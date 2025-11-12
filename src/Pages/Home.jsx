@@ -7,20 +7,24 @@ import Review from "../Components/Review/Review";
 import NewsLetter from "../Components/NewsLetter/NewsLetter";
 import OverView from "./OverView";
 import { AuthContext } from "../Context/AuthContext";
+import { useLoaderData } from "react-router";
 
 const Home = () => {
-  const {user}=use(AuthContext);
+  const { user } = use(AuthContext);
+  const data = useLoaderData();
+
+  const userEmail = user?.email;
+  const myData = data.filter((i) => i.email === userEmail);
+
   return (
     <div>
       <Hero />
-      {
-        user ?<OverView/>: ''
-      }
+      {user ? <OverView myData={myData} /> : ""}
       <Feture />
       <AboutFinEase />
       <Tips />
       <Review />
-      <NewsLetter/>
+      <NewsLetter />
     </div>
   );
 };

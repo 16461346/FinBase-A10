@@ -1,9 +1,11 @@
 import React, { useState, useContext } from "react";
 import { AuthContext } from "../Context/AuthContext";
 import { toast } from "react-toastify";
+import { useNavigate } from "react-router";
 
 const AddTransaction = () => {
   const { user } = useContext(AuthContext);
+  const navigate = useNavigate();
 
   // State
   const [type, setType] = useState(""); // Income / Expense
@@ -40,35 +42,45 @@ const AddTransaction = () => {
       ? expenseCategories
       : [];
 
-  // Form submit handler
-  const handleAdd = (e) => {
+  const handleAdd = async (e) => {
     e.preventDefault();
     const E = e.target;
 
+
+    const inputDate = E.date.value; // "2025-11-12"
+    const jsonDate = new Date(inputDate + "T00:00:00Z").toISOString(); // ✅ 
+
     const formData = {
-      type, // from state
-      date: E.date.value,
+      type,
+      date: jsonDate, // MongoDB-compatible ISODate
       category: E.category.value,
       email: user?.email,
       name: user?.displayName,
-      amount: E.amount.value,
+      amount: parseFloat(E.amount.value),
       description: E.description.value,
     };
-    fetch("http://localhost:3000/transactions", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(formData),
-    }).then((res) => res.json());
-    toast
-      .success("Trasaction added success")
-      .then((data) => {
-        console.log(data);
-      })
-      .catch((err) => {
-        console.log(err);
+
+    try {
+      const res = await fetch("http://localhost:3000/transactions", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
       });
+
+      const data = await res.json();
+
+      if (data.success) {
+        toast.success("Transaction added successfully ✅");
+        navigate("/my-transaction");
+      } else {
+        toast.error("Failed to add transaction ❌");
+      }
+    } catch (err) {
+      console.error(err);
+      toast.error("Server error!");
+    }
   };
 
   return (
@@ -133,14 +145,16 @@ const AddTransaction = () => {
               required
               name="date"
               type="date"
-              defaultValue={today} 
+              defaultValue={today}
               className="input h-6 sm:h-7 md:h-10 text-[12px] p-2 md:text-sm w-full text-sm border border-gray-300 focus:outline-none focus:ring-2 focus:ring-teal-400"
             />
           </div>
 
           <div className="w-1/2">
             <label className="label">
-              <span className="label-text text-black text-[15px]">Category</span>
+              <span className="label-text text-black text-[15px]">
+                Category
+              </span>
             </label>
             <select
               required
@@ -164,7 +178,9 @@ const AddTransaction = () => {
         {/* User Email & Name */}
         <div>
           <label className="label">
-            <span className="label-text text-black text-[15px]">User Email</span>
+            <span className="label-text text-black text-[15px]">
+              User Email
+            </span>
           </label>
           <input
             readOnly
@@ -191,7 +207,9 @@ const AddTransaction = () => {
         {/* Description */}
         <div>
           <label className="label">
-            <span className="label-text text-black text-[15px]">Description</span>
+            <span className="label-text text-black text-[15px]">
+              Description
+            </span>
           </label>
           <textarea
             required

@@ -13,7 +13,6 @@ import { auth, provider } from "../firebase/firebase.config";
 
 const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
-  const [totalMoney, setTotalMoney] = useState(0);
   const [loading, setLoading] = useState(true);
 
   const creatUser = (email, password) => {
@@ -62,8 +61,6 @@ const AuthProvider = ({ children }) => {
     loginUser,
     user,
     loading,
-    totalMoney,
-    setTotalMoney,
   };
 
   return <AuthContext value={authInfo}>{children}</AuthContext>;

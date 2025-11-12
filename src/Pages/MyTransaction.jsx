@@ -1,5 +1,5 @@
 import { Eye } from "lucide-react";
-import React, { use, useEffect, useState } from "react";
+import React, { use, useState } from "react";
 import { NavLink, useLoaderData } from "react-router";
 import { AuthContext } from "../Context/AuthContext";
 import { format, parseISO } from "date-fns";
@@ -8,7 +8,7 @@ import { TbCurrencyTaka } from "react-icons/tb";
 
 const MyTransaction = () => {
   const data = useLoaderData();
-  const { user, setTotalMoney } = use(AuthContext);
+  const { user } = use(AuthContext);
 
   const userEmail = user?.email;
   const myData = data.filter((i) => i.email === userEmail);
@@ -31,11 +31,7 @@ const MyTransaction = () => {
     .filter((item) => item.type.toLowerCase() === "expense")
     .reduce((sum, item) => sum + Number(item.amount), 0);
 
-  const total = totalIncome - totalExpense;
 
-  useEffect(() => {
-    setTotalMoney(total);
-  }, [total]);
 
 const searchData = (myData, typeData) => {
   const Data = typeData.toLowerCase().trim();
@@ -78,7 +74,7 @@ filteredData = filterData(filteredData, filterType);
           </h2>
         </div>
 
-        <div className="flex gap-2 md:mr-14 items-center">
+        <div className="flex gap-2 md:mr-16 items-center">
           {/* Search by category */}
           <input
             type="search"

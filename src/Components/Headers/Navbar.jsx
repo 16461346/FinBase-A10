@@ -9,7 +9,7 @@ import { MdLogout } from "react-icons/md";
 import { TbCurrencyTaka } from "react-icons/tb";
 
 const Navbar = () => {
-  const { user, logOutUser,totalMoney } = use(AuthContext);
+  const { user, logOutUser } = use(AuthContext);
 
   const handleLogOut = () => {
     logOutUser()
@@ -88,11 +88,6 @@ const Navbar = () => {
         {user ? (
           <div className="text-xs sm:text-sm md:text-base lg:text-lg pl-1 sm:pl-2 leading-4">
             <p className="font-medium">{user?.displayName}</p>
-            <h2 className={`flex font-bold items-center sm:gap-0 `}>
-              <span>Total : <span className={`${totalMoney >=0?"text-pink-500":"text-[#03a799]"}`}>{totalMoney}</span></span>
-              <TbCurrencyTaka className="inline" />
-              
-            </h2>
           </div>
         ) : (
           ""

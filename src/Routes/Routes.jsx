@@ -11,6 +11,7 @@ import PrivetRoutes from "./PrivetRoutes";
 import Profile from "../Pages/Profile";
 import OverView from "../Pages/OverView";
 import TransactionDetails from "../Pages/TransactionDetails";
+import UpdateTransaction from "../Pages/UpdateTransaction";
 
 export const router = createBrowserRouter([
   {
@@ -20,6 +21,7 @@ export const router = createBrowserRouter([
       {
         index: true,
         element: <Home />,
+        loader: () => fetch("http://localhost:3000/transactions"),
       },
       {
         path: "/add-transaction",
@@ -71,6 +73,16 @@ export const router = createBrowserRouter([
         element: (
           <PrivetRoutes>
             <TransactionDetails />
+          </PrivetRoutes>
+        ),
+        loader: ({ params }) =>
+          fetch(`http://localhost:3000/transactions/${params.id}`),
+      },
+      {
+        path: "/update-transacion/:id",
+        element: (
+          <PrivetRoutes>
+            <UpdateTransaction />
           </PrivetRoutes>
         ),
         loader: ({ params }) =>
