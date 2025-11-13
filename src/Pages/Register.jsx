@@ -27,11 +27,10 @@ const Register = () => {
       return;
     }
 
-    const passwordPattern = /^(?=.*[A-Z])(?=.*\d)[A-Za-z\d]{6,}$/;
+    const passwordPattern = /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)[A-Za-z\d]{6,}$/;
+
     if (!passwordPattern.test(password)) {
-      setError(
-        "Password must include 1 uppercase letter and 1 number."
-      );
+      setError("Password must be 1 uppercase 1 lowercase  and 1 number password must be 6 carecter's.");
       return;
     }
 
