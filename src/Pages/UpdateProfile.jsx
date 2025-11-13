@@ -2,12 +2,14 @@ import React, { useContext, useState } from "react";
 import { AuthContext } from "../Context/AuthContext";
 import { toast } from "react-toastify";
 import { getAuth, updateProfile, updateEmail } from "firebase/auth";
+import { useNavigate } from "react-router";
 
 
 //firebase update
 const UpdateProfile = () => {
   const { user,setUser } = useContext(AuthContext);
   const auth = getAuth();
+  const navigate=useNavigate();
  
 
   const [profile, setProfile] = useState({
@@ -61,6 +63,7 @@ const UpdateProfile = () => {
       })
 
       toast.success("Profile updated successfully!");
+      navigate('/profile')
     } catch (error) {
       console.error(error);
       toast.error("Firebase update failed: " + error.message);
