@@ -42,46 +42,51 @@ const AddTransaction = () => {
       ? expenseCategories
       : [];
 
-  const handleAdd = async (e) => {
-    e.preventDefault();
-    const E = e.target;
+const handleAdd = async (e) => {
+  e.preventDefault();
+  const E = e.target;
 
+  const inputDate = E.date.value;
+  const [year, month, day] = inputDate.split("-").map(Number);
+  const dateUTC = new Date(Date.UTC(year, month - 1, day));
 
-    const inputDate = E.date.value; // "2025-11-12"
-    const jsonDate = new Date(inputDate + "T00:00:00Z").toISOString();  
+  
+  const amount = Number(E.amount.value);
+  if (isNaN(amount) || amount < 0) {
+    return toast.error("Please enter a valid amount");
+  }
 
-    const formData = {
-      type,
-      date: jsonDate, // MongoDB-compatible ISODate
-      category: E.category.value,
-      email: user?.email,
-      name: user?.displayName,
-      amount: parseFloat(E.amount.value),
-      description: E.description.value,
-    };
-
-    try {
-      const res = await fetch("http://localhost:3000/transactions", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(formData),
-      });
-
-      const data = await res.json();
-
-      if (data.success) {
-        toast.success("Transaction added successfully");
-        navigate("/my-transaction");
-      } else {
-        toast.error("Failed to add transaction ");
-      }
-    } catch (err) {
-      console.error(err);
-      toast.error("Server error!");
-    }
+  const formData = {
+    type,
+    date: dateUTC,
+    category: E.category.value,
+    email: user?.email,
+    name: user?.displayName,
+    amount: amount,
+    description: E.description.value,
   };
+
+  try {
+    const res = await fetch("http://localhost:3000/transactions", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(formData),
+    });
+
+    const data = await res.json();
+
+    if (data.success) {
+      toast.success("Transaction added successfully");
+      navigate("/my-transaction");
+    } else {
+      toast.error("Failed to add transaction");
+    }
+  } catch (err) {
+    console.error(err);
+    toast.error("Server error!");
+  }
+};
+
 
   return (
     <div

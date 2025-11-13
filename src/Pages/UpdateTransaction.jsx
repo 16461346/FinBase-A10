@@ -1,10 +1,17 @@
 import React, { useState } from "react";
-import { useLoaderData } from "react-router";
+import { useLoaderData, useNavigate } from "react-router";
 import { toast } from "react-toastify";
 
 const UpdateTransactionForm = () => {
   const da = useLoaderData();
   const data = da.result;
+  const formatDateForInput = (isoString) => {
+    const d = new Date(isoString);
+    const year = d.getUTCFullYear();
+    const month = String(d.getUTCMonth() + 1).padStart(2, "0"); // 0-based month
+    const day = String(d.getUTCDate()).padStart(2, "0");
+    return `${year}-${month}-${day}`;
+  };
 
   const {
     _id,
@@ -21,8 +28,9 @@ const UpdateTransactionForm = () => {
   const [amount, setAmount] = useState(defaultAmount);
   const [type, setType] = useState(defaultType);
   const [category, setCategory] = useState(defaultCategory);
-  const [date, setDate] = useState(defaultDate);
+  const [date, setDate] = useState(formatDateForInput(defaultDate));
   const [description, setDescription] = useState(defaultDescription);
+  const navigate = useNavigate();
 
   const incomeCategories = [
     "Salary",
@@ -54,42 +62,42 @@ const UpdateTransactionForm = () => {
       ? expenseCategories
       : [];
 
-const handleUpdate = async (e) => {
-  e.preventDefault();
+  const handleUpdate = async (e) => {
+    e.preventDefault();
 
-  // Input থেকে date নিয়ে ISO string এ convert করা
-  const isoDate = new Date(date + "T00:00:00Z").toISOString();
+    // Input থেকে date নিয়ে ISO string এ convert করা
+    const isoDate = new Date(date + "T00:00:00Z").toISOString();
 
-  const formData = {
-    type,
-    amount: parseFloat(amount),
-    category,
-    date: isoDate, 
-    description,
-  };
+    const formData = {
+      type,
+      amount: parseFloat(amount),
+      category,
+      date: isoDate,
+      description,
+    };
 
-  try {
-    const res = await fetch(`http://localhost:3000/transactions/${_id}`, {
-      method: "PUT",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(formData),
-    });
+    try {
+      const res = await fetch(`http://localhost:3000/transactions/${_id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData),
+      });
 
-    const result = await res.json();
+      const result = await res.json();
 
-    if (result.success) {
-      toast.success("Transaction updated successfully!");
-    } else {
-      toast.error("Failed to update transaction!");
+      if (result.success) {
+        toast.success("Transaction updated successfully!");
+        navigate("/my-transaction");
+      } else {
+        toast.error("Failed to update transaction!");
+      }
+
+      console.log(result);
+    } catch (err) {
+      toast.error("Something went wrong!");
+      console.error(err);
     }
-
-    console.log(result);
-  } catch (err) {
-    toast.error("Something went wrong!");
-    console.error(err);
-  }
-};
-
+  };
 
   return (
     <div
@@ -139,7 +147,6 @@ const handleUpdate = async (e) => {
           </div>
         </div>
 
-        {/* Date & Category */}
         <div className="flex gap-4">
           <div className="w-1/2">
             <label className="label">
@@ -147,6 +154,7 @@ const handleUpdate = async (e) => {
             </label>
             <input
               type="date"
+              defaultValue={date}
               value={date}
               onChange={(e) => setDate(e.target.value)}
               className="input h-10 w-full text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-400"
@@ -215,7 +223,7 @@ const handleUpdate = async (e) => {
             value={description}
             onChange={(e) => setDescription(e.target.value)}
             rows={5}
-           className="input  h-16 md:h-20 lg:h-22 w-full text-[13px] md:text-sm border border-gray-300 focus:outline-none focus:ring-2 focus:ring-teal-400 resize-none overflow-hidden break-words whitespace-normal"
+            className="input  h-16 md:h-20 lg:h-22 w-full text-[13px] md:text-sm border border-gray-300 focus:outline-none focus:ring-2 focus:ring-teal-400 resize-none overflow-hidden break-words whitespace-normal"
           />
         </div>
 

@@ -6,8 +6,9 @@ import { getAuth, updateProfile, updateEmail } from "firebase/auth";
 
 //firebase update
 const UpdateProfile = () => {
-  const { user } = useContext(AuthContext);
+  const { user,setUser } = useContext(AuthContext);
   const auth = getAuth();
+ 
 
   const [profile, setProfile] = useState({
     name: user.displayName || "",
@@ -52,6 +53,12 @@ const UpdateProfile = () => {
       if (profile.email !== auth.currentUser.email) {
         await updateEmail(auth.currentUser, profile.email);
       }
+      setUser({
+        ...auth.currentUser,
+        displayName:profile.name,
+        email: profile.email,
+        photoURL: profile.image,
+      })
 
       toast.success("Profile updated successfully!");
     } catch (error) {
