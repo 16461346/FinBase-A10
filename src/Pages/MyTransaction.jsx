@@ -61,7 +61,7 @@ filteredData = filterData(filteredData, filterType);
       {/* Search & Filter */}
       <div className="flex container mx-auto items-center sm:flex-row justify-between sm:items-center gap-4 mb-4">
         <div>
-          <h2 className="flex text-xs sm:text-sm md:text-base items-center">
+          <h2 className="flex text-xs  sm:text-sm md:text-base items-center">
             <span className="font-semibold">Total Income: </span>{" "}
             <span className="text-[#03a799] font-bold pl-2">{totalIncome}</span>
             <TbCurrencyTaka />
@@ -74,8 +74,7 @@ filteredData = filterData(filteredData, filterType);
           </h2>
         </div>
 
-        <div className="flex gap-2 md:mr-16 items-center">
-          {/* Search by category */}
+        <div className="flex  gap-0 md:gap-4 lg:gap-6 md:mr-16 items-center">
           <input
             type="search"
             placeholder="Search by category"
