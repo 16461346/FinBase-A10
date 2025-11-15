@@ -5,69 +5,74 @@ import { AuthContext } from "../Context/AuthContext";
 import { format, parseISO } from "date-fns";
 import NotFound from "../Components/NotFound";
 import { TbCurrencyTaka } from "react-icons/tb";
+import Loadding from "../Components/Loadding";
 
 const MyTransaction = () => {
   const { user } = useContext(AuthContext);
   const [myData, setMyData] = useState([]);
   const [typeData, setTypeData] = useState("");
   const [filterType, setFilterType] = useState("");
-
+  const [loading, setLoading] = useState(true);
 
   const formatDate = (isoDate) => format(parseISO(isoDate), "dd MMM yyyy");
   const capitalize = (str) =>
     str ? str.charAt(0).toUpperCase() + str.slice(1) : "";
 
+  // 🔹 Fetch transactions from server
   useEffect(() => {
     if (!user) return;
 
     const fetchTransactions = async () => {
+      setLoading(true);
       try {
         const token = await user.getIdToken();
-        const res = await fetch("https://fin-ease-a10-server.vercel.app/transactions", {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        });
+        const res = await fetch(
+          "https://fin-ease-a10-server.vercel.app/transactions",
+          {
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
 
         const data = await res.json();
-        console.log("Transactions response:", data); 
         const transactions = Array.isArray(data) ? data : data.result || [];
         const filtered = transactions.filter((i) => i.email === user.email);
         setMyData(filtered);
       } catch (error) {
         console.error("Failed to fetch transactions:", error);
         setMyData([]);
+      } finally {
+        setLoading(false);
       }
     };
 
     fetchTransactions();
   }, [user]);
 
-  const totalIncome = myData
+  // 🔹 Filter and Search
+  const filteredData = myData
+    .filter((item) =>
+      filterType
+        ? item.type.toLowerCase().includes(filterType.toLowerCase())
+        : true
+    )
+    .filter((item) =>
+      typeData
+        ? item.category.toLowerCase().includes(typeData.toLowerCase().trim())
+        : true
+    );
+
+  const totalIncome = filteredData
     .filter((item) => item.type.toLowerCase() === "income")
     .reduce((sum, item) => sum + Number(item.amount), 0);
 
-  const totalExpense = myData
+  const totalExpense = filteredData
     .filter((item) => item.type.toLowerCase() === "expense")
     .reduce((sum, item) => sum + Number(item.amount), 0);
 
-  const searchData = (myData, typeData) => {
-    if (!typeData) return myData;
-    return myData.filter((item) =>
-      item.category.toLowerCase().includes(typeData.toLowerCase().trim())
-    );
-  };
-
-  const filterData = (myData, filterType) => {
-    if (!filterType) return myData;
-    return myData.filter((item) =>
-      item.type.toLowerCase().includes(filterType.toLowerCase().trim())
-    );
-  };
-
-  let filteredData = searchData(myData, typeData);
-  filteredData = filterData(filteredData, filterType);
+  // 🔹 Show loader when fetching or filtering
 
   return (
     <div className="container mx-auto px-3 md:px-6 py-6">
@@ -107,9 +112,15 @@ const MyTransaction = () => {
             onChange={(e) => setFilterType(e.target.value)}
             className="text-[14px] md:text-sm rounded-xl sm:select-sm md:select-md w-12 sm:w-36 md:w-20 h-6 md:h-9 border border-gray-300 focus:outline-none"
           >
-            <option value="">All</option>
-            <option value="expense">Expense</option>
-            <option value="income">Income</option>
+            <option className="text-black" value="">
+              All
+            </option>
+            <option className="text-black" value="expense">
+              Expense
+            </option>
+            <option className="text-black" value="income">
+              Income
+            </option>
           </select>
         </div>
       </div>
@@ -119,16 +130,29 @@ const MyTransaction = () => {
           <thead className="text-gray-500">
             <tr>
               <th className="whitespace-nowrap px-2 py-2 text-left">Type</th>
-              <th className="whitespace-nowrap px-2 py-2 text-left">Category</th>
+              <th className="whitespace-nowrap px-2 py-2 text-left">
+                Category
+              </th>
               <th className="whitespace-nowrap px-2 py-2 text-left">Amount</th>
               <th className="whitespace-nowrap px-2 py-2 text-left">Date</th>
-              <th className="whitespace-nowrap px-2 py-2 text-center">Actions</th>
+              <th className="whitespace-nowrap px-2 py-2 text-center">
+                Actions
+              </th>
             </tr>
           </thead>
           <tbody>
-            {filteredData.length === 0 ? (
+            {loading ? (
               <tr>
-                <td colSpan="5" className="text-center py-6 text-[14px] sm:text-sm md:text-base">
+                <td colSpan="5" className="text-center py-6">
+                  <Loadding />
+                </td>
+              </tr>
+            ) : filteredData.length === 0 ? (
+              <tr>
+                <td
+                  colSpan="5"
+                  className="text-center py-6 text-[14px] sm:text-sm md:text-base"
+                >
                   <NotFound />
                 </td>
               </tr>
