@@ -68,7 +68,7 @@ const handleAdd = async (e) => {
 
   try {
     const token = await user.getIdToken();
-    const res = await fetch(`http://localhost:3000/transactions`, {
+    const res = await fetch(`https://fin-ease-a10-server.vercel.app/transactions`, {
       method: "POST",
       headers: {
          "Content-Type": "application/json",
@@ -86,7 +86,7 @@ const handleAdd = async (e) => {
       toast.error("Failed to add transaction");
     }
   } catch (err) {
-    console.error(err);
+    //.error(err);
     toast.error("Server error!");
   }
 };

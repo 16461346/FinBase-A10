@@ -17,7 +17,7 @@ const TransactionDetails = () => {
 
 
   useEffect(() => {
-    fetch(`http://localhost:3000/transactions/${id}`, {
+    fetch(`https://fin-ease-a10-server.vercel.app/transactions/${id}`, {
       headers: { authorization: `Bearer ${user.accessToken}` },
     })
       .then((res) => res.json())
@@ -26,7 +26,7 @@ const TransactionDetails = () => {
         setLoading(false);
       })
       .catch((err) => {
-        console.error(err);
+        //.error(err);
         Swal.fire({
           title: "Error!",
           text: "Failed to fetch transaction.",
@@ -58,9 +58,9 @@ const TransactionDetails = () => {
     }).then((result) => {
       if (result.isConfirmed) {
         setDeleting(true);
-        fetch(`http://localhost:3000/transactions/${transaction._id}`, {
+        fetch(`https://fin-ease-a10-server.vercel.app/transactions/${transaction._id}`, {
           method: "DELETE",
-          headers: { "Content-Type": "application/json" },
+          headers: { "Content-Type": "application/json", authorization: `Bearer ${user.accessToken}` },
         })
           .then((res) => res.json())
           .then(() => {
@@ -72,7 +72,7 @@ const TransactionDetails = () => {
             navigate("/my-transaction");
           })
           .catch((error) => {
-            console.error(error);
+            //.error(error);
             Swal.fire({
               title: "Error!",
               text: "Failed to delete transaction.",

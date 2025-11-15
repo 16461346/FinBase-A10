@@ -67,7 +67,7 @@ const UpdateTransactionForm = () => {
         const token = await user.getIdToken();
 
         const res = await fetch(
-          `http://localhost:3000/transactions/${params.id}`,
+          `https://fin-ease-a10-server.vercel.app/transactions/${params.id}`,
           {
             headers: {
               "Content-Type": "application/json",
@@ -92,7 +92,7 @@ const UpdateTransactionForm = () => {
 
         setLoading(false);
       } catch (err) {
-        console.error(err);
+        //.error(err);
         setError(err.message || "Something went wrong!");
         setLoading(false);
       }
@@ -117,7 +117,7 @@ const UpdateTransactionForm = () => {
       };
 
       const res = await fetch(
-        `http://localhost:3000/transactions/${params.id}`,
+        `https://fin-ease-a10-server.vercel.app/transactions/${params.id}`,
         {
           method: "PUT",
           headers: {
@@ -136,7 +136,7 @@ const UpdateTransactionForm = () => {
         toast.error("Failed to update transaction!");
       }
     } catch (err) {
-      console.error(err);
+      //.error(err);
       toast.error("Something went wrong!");
     }
   };

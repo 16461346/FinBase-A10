@@ -47,7 +47,7 @@ const Register = () => {
           image: user.photoURL || image,
         };
 
-        return fetch(`http://localhost:3000/users`, {
+        return fetch(`https://fin-ease-a10-server.vercel.app/users`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -61,7 +61,7 @@ const Register = () => {
         navigate(location.state?.from || "/");
       })
       .catch((err) => {
-        console.error(err);
+        //.error(err);
         if (err.code === "auth/email-already-in-use") {
           setError("Email already in use!");
         } else {
@@ -81,7 +81,7 @@ const Register = () => {
           image: user.photoURL,
         };
 
-        fetch(`http://localhost:3000/users`, {
+        fetch(`https://fin-ease-a10-server.vercel.app/users`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -93,10 +93,10 @@ const Register = () => {
             toast.success("Login successfully!");
             navigate(location.state?.from || "/");
           })
-          .catch((error) => console.error(error));
+          .catch((error) => //.error(error));
       })
       .catch((error) => {
-        console.error(error.message);
+        //.error(error.message);
         setError("Google login failed.");
       });
   };

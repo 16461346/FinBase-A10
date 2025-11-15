@@ -17,7 +17,7 @@ const OverViewPie = () => {
       try {
         const token = await user.getIdToken(); 
 
-        const res = await fetch("http://localhost:3000/transactions", {
+        const res = await fetch("https://fin-ease-a10-server.vercel.app/transactions", {
           headers: {
             Authorization: `Bearer ${token}`, 
           },
@@ -51,7 +51,7 @@ const OverViewPie = () => {
               ]
         );
       } catch (error) {
-        console.error(error);
+        //.error(error);
       }
     };
 

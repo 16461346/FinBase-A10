@@ -13,7 +13,7 @@ const Login = () => {
   const [resetE, setResetE] = useState("");
   const location = useLocation();
   const navigate = useNavigate();
-  // console.log(location);
+  // //.log(location);
 
   // যদি ইউজার আগে থেকেই লগইন করা থাকে
   // useEffect(() => {
@@ -35,7 +35,7 @@ const Login = () => {
           email: user.email,
           image: user.photoURL,
         };
-        fetch(`http://localhost:3000/users`, {
+        fetch(`https://fin-ease-a10-server.vercel.app/users`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -48,11 +48,11 @@ const Login = () => {
             navigate(location.state || "/");
           })
           .catch(error=>{
-            console.log(error)
+            //.log(error)
           })
       })
       .catch((err) => {
-        console.error(err);
+        //.error(err);
         setError("Invalid email or password!");
       });
   };
@@ -67,7 +67,7 @@ const Login = () => {
           email: user.email,
           image: user.photoURL,
         };
-        fetch(`http://localhost:3000/users`, {
+        fetch(`https://fin-ease-a10-server.vercel.app/users`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -80,7 +80,7 @@ const Login = () => {
             navigate(location.state || "/");
           })
           .cetch((err) => {
-            console.log(err);
+            //.log(err);
           });
       })
       .catch((err) => {
@@ -101,7 +101,7 @@ const Login = () => {
         toast.success("Password reset email sent!");
       })
       .catch((error) => {
-        console.error(error);
+        //.error(error);
       });
   };
 

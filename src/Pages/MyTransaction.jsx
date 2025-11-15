@@ -23,7 +23,7 @@ const MyTransaction = () => {
     const fetchTransactions = async () => {
       try {
         const token = await user.getIdToken();
-        const res = await fetch("http://localhost:3000/transactions", {
+        const res = await fetch("https://fin-ease-a10-server.vercel.app/transactions", {
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
@@ -31,12 +31,12 @@ const MyTransaction = () => {
         });
 
         const data = await res.json();
-        console.log("Transactions response:", data); 
+        //.log("Transactions response:", data); 
         const transactions = Array.isArray(data) ? data : data.result || [];
         const filtered = transactions.filter((i) => i.email === user.email);
         setMyData(filtered);
       } catch (error) {
-        console.error("Failed to fetch transactions:", error);
+        //.error("Failed to fetch transactions:", error);
         setMyData([]);
       }
     };

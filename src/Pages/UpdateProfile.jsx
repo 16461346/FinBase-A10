@@ -25,12 +25,13 @@ const UpdateProfile = () => {
   //mongodb update
   const handleUpdate = async (e) => {
     e.preventDefault();
+
     try {
       const res = await fetch(
-        `http://localhost:3000/update-user?email=${user.email}`,
+        `https://fin-ease-a10-server.vercel.app/update-user?email=${user.email}`,
         {
           method: "PUT",
-          headers: { "Content-Type": "application/json" },
+          headers: { "Content-Type": "application/json",authorization: `Bearer ${user.accessToken}` },
           body: JSON.stringify(profile),
         }
       );
@@ -41,7 +42,7 @@ const UpdateProfile = () => {
         return;
       }
     } catch (err) {
-      console.error(err);
+      //.error(err);
       toast.error("Backend update failed");
       return;
     }
@@ -65,7 +66,7 @@ const UpdateProfile = () => {
       toast.success("Profile updated successfully!");
       navigate('/profile')
     } catch (error) {
-      console.error(error);
+      //.error(error);
       toast.error("Firebase update failed: " + error.message);
     }
   };

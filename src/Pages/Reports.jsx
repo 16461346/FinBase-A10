@@ -32,7 +32,11 @@ const Reports = () => {
   useEffect(() => {
     if (!user) return;
 
-    fetch(`http://localhost:3000/report-page?email=${user.email}`)
+    fetch(`https://fin-ease-a10-server.vercel.app/report-page?email=${user.email}`,{
+      headers:{
+        authorization:`Bearer ${user.accessToken}`
+      }
+    })
       .then((res) => res.json())
       .then((result) => {
         if (!result || !Array.isArray(result)) return;
@@ -78,7 +82,7 @@ const Reports = () => {
         });
         setMonthlyData(monthTotals);
       })
-      .catch((err) => console.log(err));
+      .catch((err) => //.log(err));
   }, [user]);
 
   const totalIncome = monthlyData.reduce((s, m) => s + m.income, 0);
