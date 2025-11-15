@@ -10,53 +10,62 @@ const OverViewPie = () => {
     { name: "Balance", value: 1 },
   ]);
 
-  useEffect(() => {
-    const fetchTransactions = async () => {
-      if (!user) return;
+ useEffect(() => {
+  const fetchTransactions = async () => {
+    if (!user) return;
 
-      try {
-        const token = await user.getIdToken(); 
+    try {
+      const token = await user.getIdToken();
 
-        const res = await fetch("https://fin-ease-a10-server.vercel.app/transactions", {
+      const res = await fetch(
+        "https://fin-ease-a10-server.vercel.app/transactions",
+        {
           headers: {
-            Authorization: `Bearer ${token}`, 
+            Authorization: `Bearer ${token}`,
           },
-        });
+        }
+      );
 
-        const data = await res.json();
+      const data = await res.json();
 
-        const totalIncome = data
-          .filter((item) => item.type === "Income")
-          .reduce((acc, item) => acc + item.amount, 0);
+      // 🔥 শুধুমাত্র লগইন করা ইউজারের ডেটা
+      const userTransactions = data.filter(
+        (item) => item.email === user.email
+      );
 
-        const totalExpense = data
-          .filter((item) => item.type === "Expense")
-          .reduce((acc, item) => acc + item.amount, 0);
+      const totalIncome = userTransactions
+        .filter((item) => item.type.toLowerCase() === "income")
+        .reduce((acc, item) => acc + Number(item.amount), 0);
 
-        const balance = totalIncome - totalExpense;
+      const totalExpense = userTransactions
+        .filter((item) => item.type.toLowerCase() === "expense")
+        .reduce((acc, item) => acc + Number(item.amount), 0);
 
-        const hasData = totalIncome > 0 || totalExpense > 0;
+      const balance = totalIncome - totalExpense;
 
-        setChartData(
-          hasData
-            ? [
-                { name: "Income", value: totalIncome },
-                { name: "Expense", value: totalExpense },
-                { name: "Balance", value: balance },
-              ]
-            : [
-                { name: "Income", value: 1 },
-                { name: "Expense", value: 1 },
-                { name: "Balance", value: 1 },
-              ]
-        );
-      } catch (error) {
-        console.error(error);
-      }
-    };
+      const hasData = totalIncome > 0 || totalExpense > 0;
 
-    fetchTransactions();
-  }, [user]);
+      setChartData(
+        hasData
+          ? [
+              { name: "Income", value: totalIncome },
+              { name: "Expense", value: totalExpense },
+              { name: "Balance", value: balance },
+            ]
+          : [
+              { name: "Income", value: 0 },
+              { name: "Expense", value: 0 },
+              { name: "Balance", value: 0 },
+            ]
+      );
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  fetchTransactions();
+}, [user]);
+
 
   const COLORS = ["#22c55e", "#ef4444", "#3b82f6"]; // Green, Red, Blue
   const hasData = chartData.some((d) => d.value > 1);
