@@ -1,4 +1,4 @@
-import React, { use } from "react";
+import React, { use, useEffect, useState } from "react";
 import { Link, NavLink } from "react-router";
 import Logo from "../../assets/pexels-tima-sfd-6694570-removebg-preview.png";
 import { AuthContext } from "../../Context/AuthContext";
@@ -10,6 +10,18 @@ import { TbCurrencyTaka } from "react-icons/tb";
 
 const Navbar = () => {
   const { user, logOutUser } = use(AuthContext);
+
+  const [theme, setTheme] = useState(localStorage.getItem("theme") || "light");
+
+  useEffect(() => {
+    const html = document.querySelector("html");
+    html.setAttribute("data-theme", theme);
+    localStorage.setItem("theme", theme);
+  }, [theme]);
+
+  const handleTheme = (checked) => {
+    setTheme(checked ? "dark" : "light");
+  };
 
   const handleLogOut = () => {
     logOutUser()
@@ -24,16 +36,46 @@ const Navbar = () => {
   const links = (
     <>
       <li>
-        <NavLink to="/">Home</NavLink>
+        <NavLink
+          to="/"
+          className={({ isActive }) =>
+            isActive
+              ? "border-b-2 border-teal-500 pb-1" // active হলে underline
+              : "pb-1"
+          }
+        >
+          Home
+        </NavLink>
       </li>
       <li>
-        <NavLink to="/add-transaction">Add Transaction</NavLink>
+        <NavLink
+          to="/add-transaction"
+          className={({ isActive }) =>
+            isActive ? "border-b-2 border-teal-500 pb-1" : "pb-1"
+          }
+        >
+          Add Transaction
+        </NavLink>
       </li>
       <li>
-        <NavLink to="/my-transaction">My Transactions</NavLink>
+        <NavLink
+          to="/my-transaction"
+          className={({ isActive }) =>
+            isActive ? "border-b-2 border-teal-500 pb-1" : "pb-1"
+          }
+        >
+          My Transactions
+        </NavLink>
       </li>
       <li>
-        <NavLink to="/reports">Reports</NavLink>
+        <NavLink
+          to="/reports"
+          className={({ isActive }) =>
+            isActive ? "border-b-2 border-teal-500 pb-1" : "pb-1"
+          }
+        >
+          Reports
+        </NavLink>
       </li>
     </>
   );
@@ -66,12 +108,17 @@ const Navbar = () => {
                   Profile
                 </Link>
               </li>
-              <li>
-                <Link to="/settings">
-                  <IoSettingsOutline />
-                  Settings
-                </Link>
-              </li>
+              <div className="flex  items-center pl-3 gap-2">
+                <h1>Theme</h1>
+                <li>
+                  <input
+                    type="checkbox"
+                    className="toggle"
+                    checked={theme === "dark"}
+                    onChange={(e) => handleTheme(e.target.checked)}
+                  />
+                </li>
+              </div>
               <li>
                 <Link onClick={handleLogOut}>
                   <MdLogout />

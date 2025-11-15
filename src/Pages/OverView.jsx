@@ -62,7 +62,7 @@ const OverViewPie = () => {
   const hasData = chartData.some((d) => d.value > 1);
 
   return (
-    <div className="w-full p-3 sm:p-4 md:p-6 bg-white rounded-2xl shadow-xl">
+    <div className="w-full container mx-auto mt-10 p-3 sm:p-4 md:p-6 bg-white rounded-2xl shadow-xl">
       <h2 className="text-xl sm:text-2xl font-bold text-center mb-4 sm:mb-6">
         Finance Overview
       </h2>
