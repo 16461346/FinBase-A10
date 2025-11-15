@@ -31,12 +31,12 @@ const MyTransaction = () => {
         });
 
         const data = await res.json();
-        //.log("Transactions response:", data); 
+        console.log("Transactions response:", data); 
         const transactions = Array.isArray(data) ? data : data.result || [];
         const filtered = transactions.filter((i) => i.email === user.email);
         setMyData(filtered);
       } catch (error) {
-        //.error("Failed to fetch transactions:", error);
+        console.error("Failed to fetch transactions:", error);
         setMyData([]);
       }
     };

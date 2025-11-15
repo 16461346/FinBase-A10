@@ -42,7 +42,7 @@ const UpdateProfile = () => {
         return;
       }
     } catch (err) {
-      //.error(err);
+      console.error(err);
       toast.error("Backend update failed");
       return;
     }
@@ -66,7 +66,7 @@ const UpdateProfile = () => {
       toast.success("Profile updated successfully!");
       navigate('/profile')
     } catch (error) {
-      //.error(error);
+      console.error(error);
       toast.error("Firebase update failed: " + error.message);
     }
   };

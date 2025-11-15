@@ -92,7 +92,7 @@ const UpdateTransactionForm = () => {
 
         setLoading(false);
       } catch (err) {
-        //.error(err);
+        console.error(err);
         setError(err.message || "Something went wrong!");
         setLoading(false);
       }
@@ -136,7 +136,7 @@ const UpdateTransactionForm = () => {
         toast.error("Failed to update transaction!");
       }
     } catch (err) {
-      //.error(err);
+      console.error(err);
       toast.error("Something went wrong!");
     }
   };

@@ -82,7 +82,7 @@ const Reports = () => {
         });
         setMonthlyData(monthTotals);
       })
-      .catch((err) => //.log(err));
+      .catch((err) => console.log(err));
   }, [user]);
 
   const totalIncome = monthlyData.reduce((s, m) => s + m.income, 0);

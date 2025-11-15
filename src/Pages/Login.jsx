@@ -13,7 +13,7 @@ const Login = () => {
   const [resetE, setResetE] = useState("");
   const location = useLocation();
   const navigate = useNavigate();
-  // //.log(location);
+  // console.log(location);
 
   // যদি ইউজার আগে থেকেই লগইন করা থাকে
   // useEffect(() => {
@@ -48,11 +48,11 @@ const Login = () => {
             navigate(location.state || "/");
           })
           .catch(error=>{
-            //.log(error)
+            console.log(error)
           })
       })
       .catch((err) => {
-        //.error(err);
+        console.error(err);
         setError("Invalid email or password!");
       });
   };
@@ -80,7 +80,7 @@ const Login = () => {
             navigate(location.state || "/");
           })
           .cetch((err) => {
-            //.log(err);
+            console.log(err);
           });
       })
       .catch((err) => {
@@ -101,7 +101,7 @@ const Login = () => {
         toast.success("Password reset email sent!");
       })
       .catch((error) => {
-        //.error(error);
+        console.error(error);
       });
   };
 

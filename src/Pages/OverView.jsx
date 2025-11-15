@@ -51,7 +51,7 @@ const OverViewPie = () => {
               ]
         );
       } catch (error) {
-        //.error(error);
+        console.error(error);
       }
     };
 

@@ -86,7 +86,7 @@ const handleAdd = async (e) => {
       toast.error("Failed to add transaction");
     }
   } catch (err) {
-    //.error(err);
+    console.error(err);
     toast.error("Server error!");
   }
 };

@@ -61,7 +61,7 @@ const Register = () => {
         navigate(location.state?.from || "/");
       })
       .catch((err) => {
-        //.error(err);
+        console.error(err);
         if (err.code === "auth/email-already-in-use") {
           setError("Email already in use!");
         } else {
@@ -93,10 +93,10 @@ const Register = () => {
             toast.success("Login successfully!");
             navigate(location.state?.from || "/");
           })
-          .catch((error) => //.error(error));
+          .catch((error) => console.error(error));
       })
       .catch((error) => {
-        //.error(error.message);
+        console.error(error.message);
         setError("Google login failed.");
       });
   };

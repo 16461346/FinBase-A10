@@ -26,7 +26,7 @@ const TransactionDetails = () => {
         setLoading(false);
       })
       .catch((err) => {
-        //.error(err);
+        console.error(err);
         Swal.fire({
           title: "Error!",
           text: "Failed to fetch transaction.",
@@ -72,7 +72,7 @@ const TransactionDetails = () => {
             navigate("/my-transaction");
           })
           .catch((error) => {
-            //.error(error);
+            console.error(error);
             Swal.fire({
               title: "Error!",
               text: "Failed to delete transaction.",
