@@ -8,7 +8,7 @@ const AddTransaction = () => {
   const navigate = useNavigate();
 
   // State
-  const [type, setType] = useState(""); // Income / Expense
+  const [type, setType] = useState("");
   const [category, setCategory] = useState("");
 
   const incomeCategories = [
@@ -67,9 +67,12 @@ const handleAdd = async (e) => {
   };
 
   try {
-    const res = await fetch("http://localhost:3000/transactions", {
+    const res = await fetch(`http://localhost:3000/transactions`, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: {
+         "Content-Type": "application/json"
+         `Bearer ${user.accessToken}`
+       },
       body: JSON.stringify(formData),
     });
 
