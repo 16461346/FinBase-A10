@@ -67,11 +67,12 @@ const handleAdd = async (e) => {
   };
 
   try {
+    const token = await user.getIdToken();
     const res = await fetch(`http://localhost:3000/transactions`, {
       method: "POST",
       headers: {
-         "Content-Type": "application/json"
-         `Bearer ${user.accessToken}`
+         "Content-Type": "application/json",
+         authorization: `Bearer ${token}`
        },
       body: JSON.stringify(formData),
     });

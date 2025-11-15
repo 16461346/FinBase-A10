@@ -11,15 +11,15 @@ import { useLoaderData } from "react-router";
 
 const Home = () => {
   const { user } = use(AuthContext);
-  const data = useLoaderData();
+  // const data = useLoaderData();
 
-  const userEmail = user?.email;
-  const myData = data.filter((i) => i.email === userEmail);
+  // const userEmail = user?.email;
+  // const myData = data.filter((i) => i.email === userEmail);
 
   return (
     <div>
       <Hero />
-      {user ? <OverView myData={myData} /> : ""}
+      {user ? <OverView/> : ""}
       <Feture />
       <AboutFinEase />
       <Tips />

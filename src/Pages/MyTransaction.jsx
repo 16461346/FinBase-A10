@@ -1,28 +1,49 @@
 import { Eye } from "lucide-react";
-import React, { use, useState } from "react";
-import { NavLink, useLoaderData } from "react-router";
+import React, { useContext, useEffect, useState } from "react";
+import { NavLink } from "react-router";
 import { AuthContext } from "../Context/AuthContext";
 import { format, parseISO } from "date-fns";
 import NotFound from "../Components/NotFound";
 import { TbCurrencyTaka } from "react-icons/tb";
 
 const MyTransaction = () => {
-  const data = useLoaderData();
-  const { user } = use(AuthContext);
-
-  const userEmail = user?.email;
-  const myData = data.filter((i) => i.email === userEmail);
-  
-
+  const { user } = useContext(AuthContext);
+  const [myData, setMyData] = useState([]);
   const [typeData, setTypeData] = useState("");
   const [filterType, setFilterType] = useState("");
 
-  const formatDate = (isoDate) => format(parseISO(isoDate), "dd MMM yyyy");
 
+  const formatDate = (isoDate) => format(parseISO(isoDate), "dd MMM yyyy");
   const capitalize = (str) =>
     str ? str.charAt(0).toUpperCase() + str.slice(1) : "";
 
- 
+  useEffect(() => {
+    if (!user) return;
+
+    const fetchTransactions = async () => {
+      try {
+        const token = await user.getIdToken();
+        const res = await fetch("http://localhost:3000/transactions", {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        const data = await res.json();
+        console.log("Transactions response:", data); 
+        const transactions = Array.isArray(data) ? data : data.result || [];
+        const filtered = transactions.filter((i) => i.email === user.email);
+        setMyData(filtered);
+      } catch (error) {
+        console.error("Failed to fetch transactions:", error);
+        setMyData([]);
+      }
+    };
+
+    fetchTransactions();
+  }, [user]);
+
   const totalIncome = myData
     .filter((item) => item.type.toLowerCase() === "income")
     .reduce((sum, item) => sum + Number(item.amount), 0);
@@ -31,26 +52,25 @@ const MyTransaction = () => {
     .filter((item) => item.type.toLowerCase() === "expense")
     .reduce((sum, item) => sum + Number(item.amount), 0);
 
+  const searchData = (myData, typeData) => {
+    if (!typeData) return myData;
+    return myData.filter((item) =>
+      item.category.toLowerCase().includes(typeData.toLowerCase().trim())
+    );
+  };
 
+  const filterData = (myData, filterType) => {
+    if (!filterType) return myData;
+    return myData.filter((item) =>
+      item.type.toLowerCase().includes(filterType.toLowerCase().trim())
+    );
+  };
 
-const searchData = (myData, typeData) => {
-  const Data = typeData.toLowerCase().trim();
-  return myData.filter((data) => data.category.toLowerCase().includes(Data));
-};
-
-const filterData = (myData, filterType) => {
-  if (!filterType) return myData;
-  const type = filterType.toLowerCase();
-  return myData.filter((item) => item.type.toLowerCase().trim().includes (type));
-};
-
-let filteredData = searchData(myData, typeData); 
-filteredData = filterData(filteredData, filterType);
-
+  let filteredData = searchData(myData, typeData);
+  filteredData = filterData(filteredData, filterType);
 
   return (
     <div className="container mx-auto px-3 md:px-6 py-6">
-      {/* Header Section */}
       <div className="text-center mb-6">
         <h2 className="text-xl sm:text-lg md:text-2xl font-semibold">
           All Transactions{" "}
@@ -58,7 +78,6 @@ filteredData = filterData(filteredData, filterType);
         </h2>
       </div>
 
-      {/* Search & Filter */}
       <div className="flex container mx-auto items-center sm:flex-row justify-between sm:items-center gap-4 mb-4">
         <div>
           <h2 className="flex text-xs  sm:text-sm md:text-base items-center">
@@ -74,7 +93,7 @@ filteredData = filterData(filteredData, filterType);
           </h2>
         </div>
 
-        <div className="flex  gap-0 md:gap-4 lg:gap-6 md:mr-16 items-center">
+        <div className="flex gap-0 md:gap-4 lg:gap-6 md:mr-16 items-center">
           <input
             type="search"
             placeholder="Search by category"
@@ -95,7 +114,6 @@ filteredData = filterData(filteredData, filterType);
         </div>
       </div>
 
-      {/* Table Section */}
       <div className="overflow-x-auto rounded-xl shadow-md p-2 sm:p-3 md:p-4">
         <table className="border-separate border-spacing-y-4 min-w-full table-auto text-[14px] sm:text-sm md:text-base">
           <thead className="text-gray-500">

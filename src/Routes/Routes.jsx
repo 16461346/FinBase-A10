@@ -22,7 +22,6 @@ export const router = createBrowserRouter([
       {
         index: true,
         element: <Home />,
-        loader: () => fetch("http://localhost:3000/transactions"),
       },
       {
         path: "/add-transaction",
@@ -39,7 +38,6 @@ export const router = createBrowserRouter([
             <MyTransaction />
           </PrivetRoutes>
         ),
-        loader: () => fetch("http://localhost:3000/transactions"),
       },
       {
         path: "/reports",
@@ -84,8 +82,6 @@ export const router = createBrowserRouter([
             <UpdateTransaction />
           </PrivetRoutes>
         ),
-        loader: ({ params }) =>
-          fetch(`http://localhost:3000/transactions/${params.id}`),
       },
       {
         path: "/update-profile",

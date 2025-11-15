@@ -1,36 +1,26 @@
-import React, { useState } from "react";
-import { useLoaderData, useNavigate } from "react-router";
+import React, { useContext, useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router";
+import { AuthContext } from "../Context/AuthContext";
 import { toast } from "react-toastify";
+import Loadding from "../Components/Loadding";
+import ErrorPage from "../Components/ErrorPage";
 
 const UpdateTransactionForm = () => {
-  const da = useLoaderData();
-  const data = da.result;
-  const formatDateForInput = (isoString) => {
-    const d = new Date(isoString);
-    const year = d.getUTCFullYear();
-    const month = String(d.getUTCMonth() + 1).padStart(2, "0"); // 0-based month
-    const day = String(d.getUTCDate()).padStart(2, "0");
-    return `${year}-${month}-${day}`;
-  };
-
-  const {
-    _id,
-    amount: defaultAmount,
-    email,
-    name,
-    description: defaultDescription,
-    date: defaultDate,
-    category: defaultCategory,
-    type: defaultType,
-  } = data;
-
-  // Controlled States
-  const [amount, setAmount] = useState(defaultAmount);
-  const [type, setType] = useState(defaultType);
-  const [category, setCategory] = useState(defaultCategory);
-  const [date, setDate] = useState(formatDateForInput(defaultDate));
-  const [description, setDescription] = useState(defaultDescription);
+  const { user } = useContext(AuthContext);
+  const params = useParams(); 
   const navigate = useNavigate();
+
+  const [transaction, setTransaction] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+
+  const [amount, setAmount] = useState("");
+  const [type, setType] = useState("");
+  const [category, setCategory] = useState("");
+  const [date, setDate] = useState("");
+  const [description, setDescription] = useState("");
+  const [email, setEmail] = useState("");
+  const [name, setName] = useState("");
 
   const incomeCategories = [
     "Salary",
@@ -62,48 +52,100 @@ const UpdateTransactionForm = () => {
       ? expenseCategories
       : [];
 
-  const handleUpdate = async (e) => {
-    e.preventDefault();
+  const formatDateForInput = (isoString) => {
+    const d = new Date(isoString);
+    const year = d.getFullYear();
+    const month = String(d.getMonth() + 1).padStart(2, "0");
+    const day = String(d.getDate()).padStart(2, "0");
+    return `${year}-${month}-${day}`;
+  };
 
-    // Input থেকে date নিয়ে ISO string এ convert করা
-    const isoDate = new Date(date + "T00:00:00Z").toISOString();
+  useEffect(() => {
+    if (!user) return;
+    const fetchTransaction = async () => {
+      try {
+        const token = await user.getIdToken();
 
-    const formData = {
-      type,
-      amount: parseFloat(amount),
-      category,
-      date: isoDate,
-      description,
+        const res = await fetch(
+          `http://localhost:3000/transactions/${params.id}`,
+          {
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+
+        if (!res.ok) throw new Error("Failed to fetch transaction");
+
+        const data = await res.json();
+        if (!data.result) throw new Error("Transaction not found");
+
+        setTransaction(data.result);
+        setAmount(data.result.amount);
+        setType(data.result.type);
+        setCategory(data.result.category);
+        setDate(formatDateForInput(data.result.date));
+        setDescription(data.result.description);
+        setEmail(data.result.email);
+        setName(data.result.name);
+
+        setLoading(false);
+      } catch (err) {
+        console.error(err);
+        setError(err.message || "Something went wrong!");
+        setLoading(false);
+      }
     };
 
+    fetchTransaction();
+  }, [user, params.id]);
+
+  const handleUpdate = async (e) => {
+    e.preventDefault();
+    if (!user) return toast.error("User not authenticated!");
+
     try {
-      const res = await fetch(`http://localhost:3000/transactions/${_id}`, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
-      });
+      const token = await user.getIdToken();
+
+      const formData = {
+        type,
+        amount: parseFloat(amount),
+        category,
+        date: new Date(date + "T00:00:00Z").toISOString(),
+        description,
+      };
+
+      const res = await fetch(
+        `http://localhost:3000/transactions/${params.id}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify(formData),
+        }
+      );
 
       const result = await res.json();
-
       if (result.success) {
         toast.success("Transaction updated successfully!");
         navigate("/my-transaction");
       } else {
         toast.error("Failed to update transaction!");
       }
-
-      console.log(result);
     } catch (err) {
-      toast.error("Something went wrong!");
       console.error(err);
+      toast.error("Something went wrong!");
     }
   };
 
+  if (loading) return <Loadding/>;
+  if (error) return <ErrorPage/>;
+
   return (
-    <div
-      className="card w-[350px] md:w-[520px] mt-10 mb-20 mx-auto 
-      bg-gradient-to-r from-cyan-200 to-purple-300 p-6 rounded-xl shadow-2xl"
-    >
+    <div className="card w-[350px] md:w-[520px] mt-10 mb-20 mx-auto bg-gradient-to-r from-cyan-200 to-purple-300 p-6 rounded-xl shadow-2xl">
       <h2 className="text-xl sm:text-2xl md:text-3xl text-black font-bold text-center mb-6">
         Update Transaction
       </h2>
@@ -121,7 +163,7 @@ const UpdateTransactionForm = () => {
               value={type}
               onChange={(e) => {
                 setType(e.target.value);
-                setCategory(""); // Reset category when type changes
+                setCategory("");
               }}
               className="input h-10 w-full text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-400"
             >
@@ -147,6 +189,7 @@ const UpdateTransactionForm = () => {
           </div>
         </div>
 
+        {/* Date & Category */}
         <div className="flex gap-4">
           <div className="w-1/2">
             <label className="label">
@@ -154,7 +197,6 @@ const UpdateTransactionForm = () => {
             </label>
             <input
               type="date"
-              defaultValue={date}
               value={date}
               onChange={(e) => setDate(e.target.value)}
               className="input h-10 w-full text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-400"
@@ -163,9 +205,7 @@ const UpdateTransactionForm = () => {
 
           <div className="w-1/2">
             <label className="label">
-              <span className="label-text text-black text-[15px]">
-                Category
-              </span>
+              <span className="label-text text-black text-[15px]">Category</span>
             </label>
             <select
               required
@@ -188,9 +228,7 @@ const UpdateTransactionForm = () => {
         {/* Email & Name */}
         <div>
           <label className="label">
-            <span className="label-text text-black text-[15px]">
-              User Email
-            </span>
+            <span className="label-text text-black text-[15px]">User Email</span>
           </label>
           <input
             type="text"
@@ -215,15 +253,13 @@ const UpdateTransactionForm = () => {
         {/* Description */}
         <div>
           <label className="label">
-            <span className="label-text text-black text-[15px]">
-              Description
-            </span>
+            <span className="label-text text-black text-[15px]">Description</span>
           </label>
           <textarea
             value={description}
             onChange={(e) => setDescription(e.target.value)}
             rows={5}
-            className="input  h-16 md:h-20 lg:h-22 w-full text-[13px] md:text-sm border border-gray-300 focus:outline-none focus:ring-2 focus:ring-teal-400 resize-none overflow-hidden break-words whitespace-normal"
+            className="input h-16 md:h-20 lg:h-22 w-full text-[13px] md:text-sm border border-gray-300 focus:outline-none focus:ring-2 focus:ring-teal-400 resize-none"
           />
         </div>
 
