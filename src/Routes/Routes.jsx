@@ -76,8 +76,6 @@ export const router = createBrowserRouter([
             <TransactionDetails />
           </PrivetRoutes>
         ),
-        loader: ({ params }) =>
-          fetch(`http://localhost:3000/transactions/${params.id}`),
       },
       {
         path: "/update-transacion/:id",
