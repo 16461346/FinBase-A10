@@ -1,16 +1,81 @@
-# React + Vite
+FinEase - Personal Finance Management App
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+FinEase একটি Personal Finance Management ওয়েব অ্যাপ যেটি Income, Expense এবং Balance ট্র্যাক করার জন্য তৈরি। অ্যাপটিতে Firebase Authentication, Google Login, JWT Authorization, Protected Routes, Transaction Filtering, Pie Chart Visualization সহ আরও অনেক ফিচার রয়েছে।
 
-Currently, two official plugins are available:
+🚀 Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+🔐 Authentication
 
-## React Compiler
+Google Sign-In (Firebase Auth)
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+JWT Token ভিত্তিক secure API access
 
-## Expanding the ESLint configuration
+Protected routes (frontend)
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+💰 Transactions
+
+Add Income
+
+Add Expense
+
+View all transactions
+
+User-wise transaction filtering
+
+Firebase user email অনুযায়ী ডেটা আলাদা রাখা
+
+📊 Dashboard Overview
+
+Pie Chart visualization (Income, Expense, Balance)
+
+Dynamic colors & responsive chart
+
+⚡ Backend
+
+Node.js + Express server
+
+Cors 
+
+Firebase Admin দ্বারা JWT verify
+
+MongoDB database (transaction management)
+
+Secure middleware for authorization
+
+📱 Responsive UI
+
+TailwindCSS দিয়ে responsive UI
+
+Mobile-first design
+
+🛠️ Technologies Used
+
+Frontend:
+
+React.js
+
+Recharts
+
+Firebase Authentication
+
+TailwindCSS
+
+Daisy UI
+
+Backend:
+
+Node.js
+
+Express.js
+
+MongoDB
+
+Firebase Admin SDK
+
+Deployment:
+
+Frontend → Vercel
+
+Backend → Vercel
+
+Database → MongoDB Atlas

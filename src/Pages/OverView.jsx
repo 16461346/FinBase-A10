@@ -68,39 +68,50 @@ const OverViewPie = () => {
 
 
   const COLORS = ["#22c55e", "#ef4444", "#3b82f6"]; // Green, Red, Blue
-  const hasData = chartData.some((d) => d.value > 1);
+// Fallback data (to show chart even if all zero)
+const displayData = chartData.map(item => ({
+  ...item,
+  value: item.value === 0 ? 1 : item.value   // Pie shape বানানোর জন্য মাত্র
+}));
 
-  return (
-    <div className="w-full container mx-auto mt-10 p-3 sm:p-4 md:p-6 bg-white rounded-2xl shadow-xl">
-      <h2 className="text-xl sm:text-2xl font-bold text-center mb-4 sm:mb-6">
-        Finance Overview
-      </h2>
+return (
+  <div className="w-full container mx-auto mt-10 p-3 sm:p-4 md:p-6 bg-white rounded-2xl shadow-xl">
+    <h2 className="text-xl sm:text-2xl font-bold text-center mb-4 sm:mb-6">
+      Finance Overview
+    </h2>
 
-      <div className="w-full h-[300px] sm:h-[400px] md:h-[550px]">
-        <ResponsiveContainer width="100%" height="100%">
-          <PieChart>
-            <Pie
-              data={chartData}
-              dataKey="value"
-              nameKey="name"
-              cx="50%"
-              cy="50%"
-              outerRadius={window.innerWidth < 640 ? 90 : window.innerWidth < 1024 ? 130 : 220}
-              innerRadius={window.innerWidth < 640 ? 50 : window.innerWidth < 1024 ? 70 : 100}
-              fill="#8884d8"
-              label={({ name, value }) => `${name}: ${value}৳`}
-            >
-              {chartData.map((entry, index) => (
-                <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-              ))}
-            </Pie>
-            <Tooltip formatter={(value) => [`${value} ৳`, "Amount"]} />
-            <Legend wrapperStyle={{ fontSize: window.innerWidth < 640 ? "12px" : "14px" }} />
-          </PieChart>
-        </ResponsiveContainer>
-      </div>
+    <div className="w-full h-[300px] sm:h-[400px] md:h-[550px]">
+      <ResponsiveContainer width="100%" height="100%">
+        <PieChart>
+          <Pie
+            data={displayData}
+            dataKey="value"
+            nameKey="name"
+            cx="50%"
+            cy="50%"
+            outerRadius={window.innerWidth < 640 ? 90 : window.innerWidth < 1024 ? 130 : 220}
+            innerRadius={window.innerWidth < 640 ? 50 : window.innerWidth < 1024 ? 70 : 100}
+            label={({ name, value }) => `${name}: ${
+              chartData.find(x => x.name === name)?.value
+            }৳`}
+          >
+            {displayData.map((entry, index) => (
+              <Cell key={index} fill={COLORS[index % COLORS.length]} />
+            ))}
+          </Pie>
+          <Tooltip 
+            formatter={(value, name) => {
+              const realValue = chartData.find(x => x.name === name)?.value || 0;
+              return [`${realValue} ৳`, "Amount"];
+            }}
+          />
+          <Legend />
+        </PieChart>
+      </ResponsiveContainer>
     </div>
-  );
+  </div>
+);
+
 };
 
 export default OverViewPie;
