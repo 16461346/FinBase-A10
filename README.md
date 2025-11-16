@@ -34,7 +34,7 @@ Dynamic colors & responsive chart
 
 Node.js + Express server
 
-Cors 
+Cors
 
 Firebase Admin দ্বারা JWT verify
 
@@ -79,3 +79,40 @@ Frontend → Vercel
 Backend → Vercel
 
 Database → MongoDB Atlas
+
+# MyProject - Client Side
+
+## Live Website
+
+[Click here to visit](https://glowing-souffle-28089c.netlify.app/)
+
+## FAQ
+
+1. **Key Rules এর মধ্যে যা আছে, সব কী ইমপ্লিমেন্ট করতে হবে?**  
+   হ্যাঁ, Key Rules-এ যা নির্দেশনা আছে, সবগুলো ইমপ্লিমেন্ট করতে হবে।
+
+2. **ক্লায়েন্ট-সাইড এবং সার্ভার-সাইড কোড আলাদা GitHub রেপোতে রাখতে হবে কি?**  
+   হ্যাঁ, আলাদা রেপোতে রাখতে হবে।
+
+3. **লাইভ ওয়েবসাইট লিঙ্ক দিতে হবে কি?**  
+   হ্যাঁ, লাইভ ডেমো লিঙ্ক দিতে হবে।
+
+4. **কোনো ডকুমেন্টেশন লাগবে কি?**  
+   হ্যাঁ, ছোট README বা গাইড থাকা উচিত।
+
+   ## FAQ
+
+5. Key Rules এর মধ্যে যা আছে, সব কী ইমপ্লিমেন্ট করতে হবে?
+
+   - হ্যাঁ, সব implement করতে হবে।
+
+6. Client-side এবং Server-side আলাদা রাখতে হবে কি?
+
+   - হ্যাঁ, আলাদা রেপোতে রাখতে হবে।
+
+7. লাইভ ওয়েবসাইট লিঙ্ক দিতে হবে কি?
+
+   - হ্যাঁ, অবশ্যই।
+
+8. ডকুমেন্টেশন দরকার কি?
+   - হ্যাঁ, setup গাইড দিতে হবে।

@@ -67,20 +67,19 @@ const OverViewPie = () => {
 }, [user]);
 
 
-  const COLORS = ["#22c55e", "#ef4444", "#3b82f6"]; // Green, Red, Blue
-// Fallback data (to show chart even if all zero)
+  const COLORS = ["#22c55e", "#ef4444", "#3b82f6"];
 const displayData = chartData.map(item => ({
   ...item,
-  value: item.value === 0 ? 1 : item.value   // Pie shape বানানোর জন্য মাত্র
+  value: item.value === 0 ? 1 : item.value  
 }));
 
 return (
   <div className="w-full container mx-auto mt-10 p-3 sm:p-4 md:p-6 bg-white rounded-2xl shadow-xl">
-    <h2 className="text-xl sm:text-2xl font-bold text-center mb-4 sm:mb-6">
+    <h2 className="text-xl sm:text-2xl md:text-4xl font-bold text-center mb-4 sm:mb-6">
       Finance Overview
     </h2>
 
-    <div className="w-full h-[300px] sm:h-[400px] md:h-[550px]">
+    <div className="w-full text-[12px]  md:text-xl lg:text-xl  h-[300px] sm:h-[400px] md:h-[550px]">
       <ResponsiveContainer width="100%" height="100%">
         <PieChart>
           <Pie
